@@ -12,6 +12,9 @@ import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.PagerAdapter
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.FragmentViewPager2Binding
+import com.example.galaxymoment.utils.Constants.DEFAULT
+import com.example.galaxymoment.utils.Constants.SWIPE_PRE_POS
+import com.example.galaxymoment.utils.Constants.SWIPE_NEX_POS
 import com.example.galaxymoment.viewmodel.VideoViewModel
 
 class ViewPager2Fragment : Fragment() {
@@ -20,6 +23,8 @@ class ViewPager2Fragment : Fragment() {
     private var _binding: FragmentViewPager2Binding? = null
     private val binding get() = _binding!!
     private var oldPosition = -1
+    private var oldOffSet = 0
+    private var checkTypeSwipe = DEFAULT
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -29,7 +34,6 @@ class ViewPager2Fragment : Fragment() {
         _binding = FragmentViewPager2Binding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[VideoViewModel::class.java]
         viewPager = binding.fragmentViewPager2
-        Log.i("dongdong","ViewPager2Fragment onCreateView listMediaItemSize = ${viewModel.videoList.value as List<MediaItems>}")
         val adapter = PagerAdapter(requireActivity(),viewModel.videoList.value as List<MediaItems>)
         viewPager.adapter = adapter
         viewModel.videoList.observe(viewLifecycleOwner) {
@@ -38,18 +42,31 @@ class ViewPager2Fragment : Fragment() {
         viewPager.offscreenPageLimit = 1
         return binding.root
     }
+
+    private var oldSwipeTypeCheck = DEFAULT
+    private var offSet = 0.0f
+    private var offSetTmp = 0.0f
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        Log.i("dongdong","ViewPager2Fragment onViewCreated")
+        binding.videoView.setOnCompletionListener {
+            binding.videoView.start()
+        }
 
         viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
-                Log.i("dongdong","ViewPager2Fragment onPageSelected position = $position")
                 super.onPageSelected(position)
+                viewModel.setCurrentPosPager(position)
+                if(checkTypeSwipe == SWIPE_PRE_POS){
+                    binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
+                    binding.videoView.start()
+                } else if(checkTypeSwipe == SWIPE_NEX_POS){
+                    binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
+                    binding.videoView.start()
+                }
             }
 
             override fun onPageScrollStateChanged(state: Int) {
-                Log.i("dongdong","ViewPager2Fragment onPageScrollStateChanged state = $state")
+                Log.i("dongdong","ViewPager2Fragment onPageScrollStateChanged state = $state position = $oldPosition")
                 super.onPageScrollStateChanged(state)
             }
 
@@ -60,12 +77,41 @@ class ViewPager2Fragment : Fragment() {
             ) {
                 Log.i("dongdong","ViewPager2Fragment onPageScrolled position = $position positionOffset = $positionOffset positionOffsetPixels = $positionOffsetPixels")
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                if(position != oldPosition){
+                if (positionOffsetPixels > oldOffSet) {
+                    //swipe to right
+                    Log.i("dongcheck","swipe right positionOffsetPixels = $position OffsetPixels oldOffSet = $oldOffSet translationX = ${binding.videoView.translationX}")
+                    oldOffSet = positionOffsetPixels
+                    checkTypeSwipe = SWIPE_NEX_POS
+                    offSet = (-positionOffsetPixels).toFloat()
+                    binding.videoView.translationX = offSet
+                }
+                else if(positionOffsetPixels < oldOffSet){
+                    //swipe to left
+                    Log.i("dongcheck","swipe left positionOffsetPixels = $position OffsetPixels oldOffSet = $oldOffSet translationX = ${binding.videoView.translationX}")
+                    oldOffSet = positionOffsetPixels
+                    checkTypeSwipe = SWIPE_PRE_POS
+                    offSet = (binding.videoView.width - positionOffsetPixels).toFloat()
+                    binding.videoView.translationX = offSet
+                    binding.fragmentViewPager2.translationX
+                }
+                if (oldSwipeTypeCheck == SWIPE_PRE_POS && checkTypeSwipe == SWIPE_NEX_POS) {
+                    offSetTmp = 0.0f
+                    Log.i("dongcheck","transfer status next -> pre $offSetTmp")
+                } else if (oldSwipeTypeCheck == SWIPE_NEX_POS && checkTypeSwipe == SWIPE_PRE_POS) {
+                    offSetTmp = -binding.videoView.width.toFloat()
+                    Log.i("dongcheck","transfer status pre -> next $offSetTmp")
+                }
+                binding.videoView.translationX += offSetTmp
+                Log.i("dong1111","translationX = ${binding.videoView.translationX}")
+                Log.i("dongdong","ViewPager2Fragment onPageScrolled position = $position positionOffset = $positionOffset positionOffsetPixels = $positionOffsetPixels")
+                oldSwipeTypeCheck = checkTypeSwipe
+
+                if(checkTypeSwipe == DEFAULT){
+                    Log.i("dongdong","setURI checkTypeSwipe : SWIPE_TO_RIGHT")
                     oldPosition = position
                     binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
                     binding.videoView.start()
                 }
-                binding.videoView.translationX = -positionOffsetPixels.toFloat()
             }
         })
     }
