@@ -14,18 +14,10 @@ class VideoViewModel : ViewModel() {
     val videoList: LiveData<MutableList<MediaItems>> = _videoList
 
     private val _currentPosPager = MutableLiveData<Int>()
-    private val currentPosPager: LiveData<Int> = _currentPosPager
+    val currentPosPager: LiveData<Int> = _currentPosPager
 
     fun setCurrentPosPager(position: Int) {
         _currentPosPager.value = position
-    }
-
-    fun getCurrentPosPager(): Int {
-        return currentPosPager.value ?: 0
-    }
-
-    fun getMediaItemList(): ArrayList<MediaItems> {
-        return videoList.value as ArrayList<MediaItems>
     }
 
     fun loadVideos(context: Context) {

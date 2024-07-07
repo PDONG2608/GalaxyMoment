@@ -8,9 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
 import com.example.galaxymoment.databinding.FragmentMediaBinding
-import com.example.galaxymoment.utils.Constants.ARG_MEDIA_PATH
 
-class MediaFragment : Fragment() {
+class SinglePageFragment(private var filePath: String) : Fragment() {
     private var _binding: FragmentMediaBinding? = null
     private val binding get() = _binding!!
 
@@ -21,12 +20,10 @@ class MediaFragment : Fragment() {
         _binding = FragmentMediaBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val mediaPath = arguments?.getString(ARG_MEDIA_PATH) ?: ""
-
         Glide.with(this)
-            .load(Uri.parse(mediaPath))
+            .load(Uri.parse(filePath))
             .frame(0)
-            .centerCrop()
+            .fitCenter()
             .into(binding.mediaImageView)
         return view
     }
@@ -34,13 +31,5 @@ class MediaFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    companion object {
-        fun newInstance(mediaPath: String) = MediaFragment().apply {
-            arguments = Bundle().apply {
-                putString(ARG_MEDIA_PATH, mediaPath)
-            }
-        }
     }
 }
