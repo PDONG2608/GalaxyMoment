@@ -11,4 +11,12 @@
         android:layout_height="match_parent"
         android:orientation="horizontal" />
 
+    <VideoView
+        android:id="@+id/videoView"
+        android:layout_width="match_parent"
+        android:background="#4DE35252"
+        android:alpha="0.5"
+        android:layout_gravity="center"
+        android:layout_height="match_parent"/>
+
 </FrameLayout>

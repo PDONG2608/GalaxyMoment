@@ -7,24 +7,24 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
-import com.example.galaxymoment.databinding.FragmentMediaBinding
+import com.example.galaxymoment.databinding.FragmentSinglePageBinding
 
 class SinglePageFragment(private var filePath: String) : Fragment() {
-    private var _binding: FragmentMediaBinding? = null
+    private var _binding: FragmentSinglePageBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        _binding = FragmentMediaBinding.inflate(inflater, container, false)
+        _binding = FragmentSinglePageBinding.inflate(inflater, container, false)
         val view = binding.root
 
         Glide.with(this)
             .load(Uri.parse(filePath))
             .frame(0)
             .fitCenter()
-            .into(binding.mediaImageView)
+            .into(binding.singlePageImage)
         return view
     }
 
