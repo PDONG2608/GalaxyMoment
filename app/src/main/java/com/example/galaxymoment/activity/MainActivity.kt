@@ -49,7 +49,6 @@ class MainActivity : AppCompatActivity() {
                 // Show an explanation to the user
             }
             else -> {
-                Log.i("dongdong","noPermission")
                 requestPermissionLauncher.launch(Manifest.permission.READ_MEDIA_VIDEO)
             }
         }

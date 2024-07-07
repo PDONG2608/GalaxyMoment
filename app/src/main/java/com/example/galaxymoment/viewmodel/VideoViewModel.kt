@@ -6,12 +6,27 @@ import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.galaxymoment.data.VideoItem
+import com.example.galaxymoment.data.MediaItems
 
 
 class VideoViewModel : ViewModel() {
-    private val _videoList = MutableLiveData<MutableList<VideoItem>>()
-    val videoList: LiveData<MutableList<VideoItem>> = _videoList
+    private val _videoList = MutableLiveData<MutableList<MediaItems>>()
+    val videoList: LiveData<MutableList<MediaItems>> = _videoList
+
+    private val _currentPosPager = MutableLiveData<Int>()
+    private val currentPosPager: LiveData<Int> = _currentPosPager
+
+    fun setCurrentPosPager(position: Int) {
+        _currentPosPager.value = position
+    }
+
+    fun getCurrentPosPager(): Int {
+        return currentPosPager.value ?: 0
+    }
+
+    fun getMediaItemList(): ArrayList<MediaItems> {
+        return videoList.value as ArrayList<MediaItems>
+    }
 
     fun loadVideos(context: Context) {
         val projection = arrayOf(
@@ -27,7 +42,7 @@ class VideoViewModel : ViewModel() {
         )
 
         cursor?.use {
-            val videos = mutableListOf<VideoItem>()
+            val videos = mutableListOf<MediaItems>()
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
 
@@ -36,9 +51,9 @@ class VideoViewModel : ViewModel() {
                 val duration = cursor.getLong(durationColumn)
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
                     .appendPath(id.toString()).build().toString()
-                videos.add(VideoItem(uri, duration))
+                videos.add(MediaItems(uri, duration))
             }
-            _videoList.postValue(videos)
+            _videoList.value = videos
         }
     }
 }
