@@ -15,7 +15,6 @@
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:background="@android:color/transparent"
-        android:alpha="1"
         android:layout_gravity="center"
         android:layout_height="match_parent"/>
 
