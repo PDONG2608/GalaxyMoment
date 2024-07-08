@@ -34,8 +34,13 @@ class MainActivity : AppCompatActivity() {
     private fun initTimeLineFragment() {
         val transaction: FragmentTransaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.fragment_container, TimelineFragment())
-        transaction.addToBackStack(null)
         transaction.commit()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.i("dongdong","onResume")
+        initTimeLineFragment()
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)

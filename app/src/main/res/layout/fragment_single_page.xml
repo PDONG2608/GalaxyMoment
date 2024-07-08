@@ -9,7 +9,7 @@
     <ImageView
         android:id="@+id/singlePageImage"
         android:layout_width="match_parent"
-        android:alpha="0.3"
+        android:alpha="0.9"
         android:layout_height="match_parent" />
 
 </FrameLayout>

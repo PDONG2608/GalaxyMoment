@@ -56,13 +56,7 @@ class ViewPager2Fragment : Fragment() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 viewModel.setCurrentPosPager(position)
-                if(checkTypeSwipe == SWIPE_PRE_POS){
-                    binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
-                    binding.videoView.start()
-                } else if(checkTypeSwipe == SWIPE_NEX_POS){
-                    binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
-                    binding.videoView.start()
-                }
+                playVideo(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {
@@ -109,10 +103,13 @@ class ViewPager2Fragment : Fragment() {
                 if(checkTypeSwipe == DEFAULT){
                     Log.i("dongdong","setURI checkTypeSwipe : SWIPE_TO_RIGHT")
                     oldPosition = position
-                    binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
-                    binding.videoView.start()
+                    playVideo(position)
                 }
             }
         })
+    }
+    fun playVideo(position : Int){
+        binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
+        binding.videoView.start()
     }
 }
