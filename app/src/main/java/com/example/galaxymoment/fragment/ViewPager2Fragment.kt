@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.example.galaxymoment.adapter.PagerAdapter
+import com.example.galaxymoment.adapter.PagerAdapterRCV
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.FragmentViewPager2Binding
 import com.example.galaxymoment.utils.Constants.DEFAULT
@@ -34,8 +34,9 @@ class ViewPager2Fragment : Fragment() {
         _binding = FragmentViewPager2Binding.inflate(inflater, container, false)
         viewModel = ViewModelProvider(requireActivity())[VideoViewModel::class.java]
         viewPager = binding.fragmentViewPager2
-        val adapter = PagerAdapter(requireActivity(),viewModel.videoList.value as List<MediaItems>)
+        val adapter = PagerAdapterRCV(viewModel.videoList.value as List<MediaItems>)
         viewPager.adapter = adapter
+        viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         viewModel.videoList.observe(viewLifecycleOwner) {
         }
         viewPager.setCurrentItem(viewModel.currentPosPager.value!!, false)
