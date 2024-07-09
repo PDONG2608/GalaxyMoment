@@ -29,6 +29,7 @@ class SinglePageFragment(private var filePath: String) : Fragment() {
             .into(binding.singlePageImage)
         return view
 
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
