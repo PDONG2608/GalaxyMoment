@@ -11,11 +11,20 @@
         android:layout_height="match_parent"
         android:orientation="horizontal" />
 
+
     <VideoView
         android:id="@+id/videoView"
         android:layout_width="match_parent"
         android:background="@android:color/transparent"
         android:layout_gravity="center"
         android:layout_height="match_parent"/>
+
+    <ImageView
+        android:id="@+id/imageViewBlur"
+        android:layout_width="match_parent"
+        android:layout_gravity="center"
+        android:visibility="invisible"
+        android:layout_height="match_parent"/>
+
 
 </FrameLayout>
