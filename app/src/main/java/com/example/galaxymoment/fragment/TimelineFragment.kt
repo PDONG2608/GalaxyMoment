@@ -2,6 +2,7 @@ package com.example.galaxymoment.fragment
 
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -40,6 +41,11 @@ class TimelineFragment : Fragment(), TimeLineAdapter.OnClickTimeLineListener {
             adapter.submitList(videoList.toMutableList())
         })
         adapter.setOnClickTimeLineListener(this)
+        binding.appBarTimeLine.addOnOffsetChangedListener{ appBarLayout, verticalOffset ->
+            val maxScroll = appBarLayout.totalScrollRange
+            val percentage = Math.abs(verticalOffset).toFloat() / maxScroll.toFloat()
+            binding.textCollapsingToolbar.alpha = (1 - percentage * 2).toFloat()
+        }
     }
 
     override fun onDestroyView() {
