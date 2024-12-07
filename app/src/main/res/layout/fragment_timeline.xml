@@ -45,6 +45,6 @@
         android:layout_height="match_parent"
         android:scrollbars="vertical"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        tools:listitem="@layout/item_video" />
+        tools:listitem="@layout/item_content_time_line" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

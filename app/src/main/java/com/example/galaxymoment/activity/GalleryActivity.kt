@@ -12,11 +12,13 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentTransaction
 import androidx.lifecycle.ViewModelProvider
 import com.example.galaxymoment.R
+import com.example.galaxymoment.callback.NavigationFragmentListener
+import com.example.galaxymoment.data.FragmentType
 import com.example.galaxymoment.databinding.ActivityMainBinding
 import com.example.galaxymoment.fragment.TimelineFragment
 import com.example.galaxymoment.viewmodel.TimelineViewModel
 
-class GalleryActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity() , NavigationFragmentListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mTimelineViewModel: TimelineViewModel
 
@@ -64,5 +66,9 @@ class GalleryActivity : AppCompatActivity() {
         } else {
             // Permission denied
         }
+    }
+
+    override fun navigateToFragment(fragmentType: FragmentType) {
+        TODO("Not yet implemented")
     }
 }

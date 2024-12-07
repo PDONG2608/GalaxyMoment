@@ -6,21 +6,23 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.galaxymoment.R
 import com.example.galaxymoment.adapter.TimeLineAdapter
 import com.example.galaxymoment.callback.ITouchListener
+import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.databinding.FragmentTimelineBinding
-import com.example.galaxymoment.repository.RepositoryImpl
+import com.example.galaxymoment.manager.TimeLineManager
 import com.example.galaxymoment.viewmodel.TimelineViewModel
 import kotlin.math.abs
 
-class TimelineFragment : Fragment(), ITouchListener {
+class TimelineFragment : Fragment() {
     private var _binding: FragmentTimelineBinding? = null
     private val binding get() = _binding!!
     private lateinit var mTimelineViewModel: TimelineViewModel
+    private lateinit var mTimelineManager: TimeLineManager
+    private lateinit var mListItem: ArrayList<TimeLineType>
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -33,34 +35,21 @@ class TimelineFragment : Fragment(), ITouchListener {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mTimelineViewModel = ViewModelProvider(requireActivity())[TimelineViewModel::class.java]
-        mTimelineViewModel.setRepo(RepositoryImpl())
-        mTimelineViewModel.getListItemDetail(requireContext())
         mTimelineViewModel.setContext(requireContext())
-        val adapter = TimeLineAdapter()
-        binding.recyclerView.layoutManager = GridLayoutManager(context, 4)
-        binding.recyclerView.adapter = adapter
+        mListItem = mTimelineViewModel.getListItemTimeLine()
+        mTimelineViewModel.getListItemDetail()
+        mTimelineManager = TimeLineManager(mTimelineViewModel, binding)
 
-        mTimelineViewModel.listItemDetail.observe(viewLifecycleOwner) { videoList ->
-            adapter.submitList(videoList.toMutableList())
-        }
-        adapter.setOnClickTimeLineListener(this)
+
         binding.appBarTimeLine.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxScroll = appBarLayout.totalScrollRange
             val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
-            binding.textCollapsingToolbar.alpha = (1 - percentage * 2).toFloat()
+            binding.textCollapsingToolbar.alpha = (1 - percentage * 2)
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
-    }
-
-    override fun onClickTimeline(uri: String, position: Int) {
-        mTimelineViewModel.setCurrentPosPager(position)
-        requireActivity().supportFragmentManager.beginTransaction()
-            .replace(R.id.timeLineLayout, DetailFragment())
-            .addToBackStack(null)
-            .commit();
     }
 }

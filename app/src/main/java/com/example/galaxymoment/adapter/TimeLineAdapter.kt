@@ -1,44 +1,48 @@
 package com.example.galaxymoment.adapter
 
-import android.annotation.SuppressLint
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.recyclerview.widget.DiffUtil
-import androidx.recyclerview.widget.ListAdapter
-import com.example.galaxymoment.callback.ITouchListener
-import com.example.galaxymoment.data.MediaItems
-import com.example.galaxymoment.databinding.ItemVideoBinding
-import com.example.galaxymoment.viewholder.TimelineViewHolder
+import androidx.recyclerview.widget.RecyclerView
+import com.example.galaxymoment.data.TimeLineType
+import com.example.galaxymoment.databinding.ItemContentTimeLineBinding
+import com.example.galaxymoment.databinding.ItemHeaderTimeLineBinding
+import com.example.galaxymoment.viewholder.TimelineContentViewHolder
+import com.example.galaxymoment.viewholder.TimelineHeaderViewHolder
+import com.example.galaxymoment.viewmodel.TimelineViewModel
 
-class TimeLineAdapter : ListAdapter<MediaItems, TimelineViewHolder>(DiffCallback()) {
+class TimeLineAdapter(private val mTimelineViewModel: TimelineViewModel) :
+    RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var mOnClickTimeLineListener : ITouchListener ?= null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {
-        val binding = ItemVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return TimelineViewHolder(binding)
+    companion object {
+        const val TYPE_HEADER = 0
+        const val TYPE_CONTENT = 1
     }
 
-    override fun onBindViewHolder(holder: TimelineViewHolder, position: Int) {
-        holder.bindThumb(getItem(position), position)
-        holder.itemView.setOnClickListener {
-            Log.i("dongdong","setOnClickTimeLineListener")
-            mOnClickTimeLineListener?.onClickTimeline(getItem(position).path,position)
+    override fun getItemViewType(position: Int): Int {
+        if (mTimelineViewModel.getListItemTimeLine()[position] is TimeLineType.TypeHeader) return TYPE_HEADER
+        return TYPE_CONTENT
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        return when(viewType){
+            TYPE_HEADER -> {
+                val binding = ItemHeaderTimeLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                TimelineHeaderViewHolder(binding)
+            }
+
+            else -> {
+                val binding = ItemContentTimeLineBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+                TimelineContentViewHolder(binding)
+            }
         }
     }
 
-    class DiffCallback : DiffUtil.ItemCallback<MediaItems>() {
-        override fun areItemsTheSame(oldItem: MediaItems, newItem: MediaItems): Boolean {
-            return oldItem.path == newItem.path
-        }
-
-        @SuppressLint("DiffUtilEquals")
-        override fun areContentsTheSame(oldItem: MediaItems, newItem: MediaItems): Boolean {
-            return oldItem == newItem
-        }
+    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+       when(holder){
+           is TimelineHeaderViewHolder -> holder.bindHeader(mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeHeader)
+           is TimelineContentViewHolder -> holder.bindThumb(mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeContent)
+       }
     }
 
-    fun setOnClickTimeLineListener(listener: ITouchListener){
-        mOnClickTimeLineListener = listener
-    }
+    override fun getItemCount(): Int = mTimelineViewModel.getListItemTimeLine().size
 }

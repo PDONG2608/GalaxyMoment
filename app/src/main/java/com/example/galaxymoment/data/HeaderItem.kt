@@ -1,4 +1,4 @@
 package com.example.galaxymoment.data
 
-data class HeaderItem(val title: String, val isChecked: Boolean) {
+data class HeaderItem(val date: String, val isChecked: Boolean) {
 }
