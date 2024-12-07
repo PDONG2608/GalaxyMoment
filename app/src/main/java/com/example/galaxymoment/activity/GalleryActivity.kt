@@ -16,7 +16,7 @@ import com.example.galaxymoment.databinding.ActivityMainBinding
 import com.example.galaxymoment.fragment.TimelineFragment
 import com.example.galaxymoment.viewmodel.TimelineViewModel
 
-class MainActivity : AppCompatActivity() {
+class GalleryActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var mTimelineViewModel: TimelineViewModel
 
@@ -27,7 +27,6 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
         mTimelineViewModel = ViewModelProvider(this)[TimelineViewModel::class.java]
         checkPermissions()
-        initTimeLineFragment()
     }
 
     private fun initTimeLineFragment() {
@@ -46,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         when {
             ContextCompat.checkSelfPermission(this, Manifest.permission.READ_MEDIA_VIDEO) == PackageManager.PERMISSION_GRANTED -> {
                 Log.i("dongdong","hasPermission")
-                mTimelineViewModel.loadVideos(this)
+                initTimeLineFragment()
             }
             shouldShowRequestPermissionRationale(Manifest.permission.READ_MEDIA_VIDEO) -> {
                 // Show an explanation to the user
@@ -61,7 +60,7 @@ class MainActivity : AppCompatActivity() {
         ActivityResultContracts.RequestPermission()
     ) { isGranted: Boolean ->
         if (isGranted) {
-            mTimelineViewModel.loadVideos(this)
+            initTimeLineFragment()
         } else {
             // Permission denied
         }

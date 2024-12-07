@@ -13,13 +13,14 @@ import com.example.galaxymoment.R
 import com.example.galaxymoment.adapter.TimeLineAdapter
 import com.example.galaxymoment.callback.ITouchListener
 import com.example.galaxymoment.databinding.FragmentTimelineBinding
+import com.example.galaxymoment.repository.RepositoryImpl
 import com.example.galaxymoment.viewmodel.TimelineViewModel
 import kotlin.math.abs
 
 class TimelineFragment : Fragment(), ITouchListener {
     private var _binding: FragmentTimelineBinding? = null
     private val binding get() = _binding!!
-    private lateinit var viewModel: TimelineViewModel
+    private lateinit var mTimelineViewModel: TimelineViewModel
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -31,15 +32,17 @@ class TimelineFragment : Fragment(), ITouchListener {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewModel = ViewModelProvider(requireActivity())[TimelineViewModel::class.java]
+        mTimelineViewModel = ViewModelProvider(requireActivity())[TimelineViewModel::class.java]
+        mTimelineViewModel.setRepo(RepositoryImpl())
+        mTimelineViewModel.getListItemDetail(requireContext())
+        mTimelineViewModel.setContext(requireContext())
         val adapter = TimeLineAdapter()
         binding.recyclerView.layoutManager = GridLayoutManager(context, 4)
         binding.recyclerView.adapter = adapter
 
-        viewModel.videoList.observe(viewLifecycleOwner, Observer { videoList ->
+        mTimelineViewModel.listItemDetail.observe(viewLifecycleOwner) { videoList ->
             adapter.submitList(videoList.toMutableList())
-        })
+        }
         adapter.setOnClickTimeLineListener(this)
         binding.appBarTimeLine.addOnOffsetChangedListener { appBarLayout, verticalOffset ->
             val maxScroll = appBarLayout.totalScrollRange
@@ -54,7 +57,7 @@ class TimelineFragment : Fragment(), ITouchListener {
     }
 
     override fun onClickTimeline(uri: String, position: Int) {
-        viewModel.setCurrentPosPager(position)
+        mTimelineViewModel.setCurrentPosPager(position)
         requireActivity().supportFragmentManager.beginTransaction()
             .replace(R.id.timeLineLayout, DetailFragment())
             .addToBackStack(null)
