@@ -1,6 +1,7 @@
 package com.example.galaxymoment.manager
 
 import android.net.Uri
+import android.os.Bundle
 import android.util.Log
 import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.ViewPagerAdapter
@@ -8,21 +9,29 @@ import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.FragmentViewPager2Binding
 import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
-import com.example.galaxymoment.viewmodel.TimelineViewModel
+import com.example.galaxymoment.utils.LogicUtils
+import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class ViewPagerManager(
-    private val mTimelineViewModel: TimelineViewModel,
-    private val binding: FragmentViewPager2Binding
+    private val mTimelineViewModel: DetailViewModel,
+    private val binding: FragmentViewPager2Binding,
+    private val arguments: Bundle?
 ) {
-    private var adapter: ViewPagerAdapter =
-        ViewPagerAdapter(mTimelineViewModel.listItemDetail.value as List<MediaItems>)
+    private lateinit var mTimelineUri: String
+    private lateinit var adapter: ViewPagerAdapter
     private var mViewPager: ViewPager2 = binding.fragmentViewPager2
     private var oldPosition = -1
 
     init {
+        arguments?.let {
+            mTimelineUri = it.getString("timeLineUri").toString()
+        }
+        val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mTimelineViewModel,mTimelineUri)
+        Log.i("dongdong", "ViewPagerManager positionOpenDetailView = $positionOpenDetailView")
+        adapter = ViewPagerAdapter(mTimelineViewModel.getListItemDetail())
         mViewPager.adapter = adapter
         mViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        mViewPager.setCurrentItem(mTimelineViewModel.currentPosPager.value!!, false)
+        mViewPager.setCurrentItem(positionOpenDetailView, false)
         mViewPager.offscreenPageLimit = 1
         viewPagerListener()
     }

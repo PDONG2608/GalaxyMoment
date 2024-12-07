@@ -26,12 +26,14 @@ class OffsetHelper {
                     oldOffSet = positionOffsetPixels
                     checkTypeSwipe = Constants.SWIPE_PRE_POS
                     offSet = (binding.videoView.width - positionOffsetPixels).toFloat()
+                    binding.fragmentViewPager2.translationX
                 }
             } else if (position + 1 == curPosVM) {
                 //swipe to left but difference position
                 oldOffSet = positionOffsetPixels
                 checkTypeSwipe = Constants.SWIPE_PRE_POS
                 offSet = (binding.videoView.width + binding.videoView.width - positionOffsetPixels).toFloat()
+                binding.fragmentViewPager2.translationX
             }
             binding.videoView.translationX = offSet
             revivalOffset(binding)

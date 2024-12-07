@@ -26,5 +26,12 @@
         android:visibility="invisible"
         android:layout_height="match_parent"/>
 
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/film_strip"
+        android:layout_gravity="bottom"
+        android:layout_marginBottom="90dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
 </FrameLayout>

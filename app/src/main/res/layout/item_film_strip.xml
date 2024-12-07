@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="@dimen/width_item_film_strip"
+    android:layout_height="@dimen/height_item_film_strip">
+
+    <ImageView
+        android:id="@+id/item_film_strip_image"
+        android:padding="2dp"
+        android:layout_width="@dimen/width_item_film_strip"
+        android:layout_height="@dimen/height_item_film_strip" />
+
+</FrameLayout>

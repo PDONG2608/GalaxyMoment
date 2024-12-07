@@ -1,5 +1,6 @@
 package com.example.galaxymoment.manager
 
+import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.galaxymoment.R
 import com.example.galaxymoment.activity.GalleryActivity
@@ -11,7 +12,7 @@ import com.example.galaxymoment.fragment.DetailFragment
 import com.example.galaxymoment.utils.LogicUtils
 import com.example.galaxymoment.viewmodel.TimelineViewModel
 
-class TimeLineManager(
+class TimeLineManager (
     private val mTimelineViewModel: TimelineViewModel,
     private val binding: FragmentTimelineBinding
 ) : ITouchListener {
@@ -25,6 +26,7 @@ class TimeLineManager(
 
     private fun initView() {
         mTimelineAdapter = TimeLineAdapter(mTimelineViewModel)
+        mTimelineAdapter.setITouchListener(this)
         mLayoutManager = GridLayoutManager(mTimelineViewModel.getContext(), 4)
         binding.recyclerView.layoutManager = mLayoutManager
         binding.recyclerView.adapter = mTimelineAdapter
@@ -32,9 +34,13 @@ class TimeLineManager(
     }
 
     override fun onClickTimeline(uri: String, position: Int) {
-        mTimelineViewModel.setCurrentPosPager(position)
+//        mTimelineViewModel.setCurrentPosPager(position)
+        val detailFragment = DetailFragment()
+        val bundle = Bundle()
+        bundle.putString("timeLineUri", uri)
+        detailFragment.arguments = bundle
         (mTimelineViewModel.getContext() as GalleryActivity).supportFragmentManager.beginTransaction()
-            .replace(R.id.timeLineLayout, DetailFragment())
+            .replace(R.id.timeLineLayout, detailFragment)
             .addToBackStack(null)
             .commit()
     }

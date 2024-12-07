@@ -3,6 +3,7 @@ package com.example.galaxymoment.adapter
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.example.galaxymoment.callback.ITouchListener
 import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.databinding.ItemContentTimeLineBinding
 import com.example.galaxymoment.databinding.ItemHeaderTimeLineBinding
@@ -12,7 +13,7 @@ import com.example.galaxymoment.viewmodel.TimelineViewModel
 
 class TimeLineAdapter(private val mTimelineViewModel: TimelineViewModel) :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
+    private lateinit var mITouchListener: ITouchListener
     companion object {
         const val TYPE_HEADER = 0
         const val TYPE_CONTENT = 1
@@ -42,7 +43,16 @@ class TimeLineAdapter(private val mTimelineViewModel: TimelineViewModel) :
            is TimelineHeaderViewHolder -> holder.bindHeader(mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeHeader)
            is TimelineContentViewHolder -> holder.bindThumb(mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeContent)
        }
+        holder.itemView.setOnClickListener {
+            if(mTimelineViewModel.getListItemTimeLine()[position] is TimeLineType.TypeContent) {
+                mITouchListener.onClickTimeline((mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeContent).mediaItems.path, position)
+            }
+        }
     }
 
     override fun getItemCount(): Int = mTimelineViewModel.getListItemTimeLine().size
+
+    fun setITouchListener(iTouchListener: ITouchListener) {
+        mITouchListener = iTouchListener
+    }
 }
