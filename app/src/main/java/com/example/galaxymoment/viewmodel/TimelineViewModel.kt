@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModel
 import com.example.galaxymoment.data.MediaItems
 
 
-class VideoViewModel : ViewModel() {
+class TimelineViewModel : ViewModel() {
     private val _videoList = MutableLiveData<MutableList<MediaItems>>()
     val videoList: LiveData<MutableList<MediaItems>> = _videoList
 

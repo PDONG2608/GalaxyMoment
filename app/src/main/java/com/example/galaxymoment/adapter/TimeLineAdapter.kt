@@ -6,35 +6,24 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
-import androidx.recyclerview.widget.RecyclerView
-import com.bumptech.glide.Glide
+import com.example.galaxymoment.callback.ITouchListener
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.ItemVideoBinding
+import com.example.galaxymoment.viewholder.TimelineViewHolder
 
-class TimeLineAdapter : ListAdapter<MediaItems, TimeLineAdapter.VideoViewHolder>(DiffCallback()) {
+class TimeLineAdapter : ListAdapter<MediaItems, TimelineViewHolder>(DiffCallback()) {
 
-    private var mOnClickTimeLineListener : OnClickTimeLineListener ?= null
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VideoViewHolder {
+    private var mOnClickTimeLineListener : ITouchListener ?= null
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TimelineViewHolder {
         val binding = ItemVideoBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return VideoViewHolder(binding)
+        return TimelineViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: VideoViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: TimelineViewHolder, position: Int) {
         holder.bindThumb(getItem(position), position)
         holder.itemView.setOnClickListener {
             Log.i("dongdong","setOnClickTimeLineListener")
-            mOnClickTimeLineListener?.onClick(getItem(position).path,position)
-        }
-    }
-
-    inner class VideoViewHolder(private val binding: ItemVideoBinding) :
-        RecyclerView.ViewHolder(binding.root) {
-        fun bindThumb(videoItem: MediaItems, position: Int) {
-            Glide.with(binding.videoThumbnail.context)
-                .load(videoItem.path)
-                .frame(0)
-                .centerCrop()
-                .into(binding.videoThumbnail)
+            mOnClickTimeLineListener?.onClickTimeline(getItem(position).path,position)
         }
     }
 
@@ -49,12 +38,7 @@ class TimeLineAdapter : ListAdapter<MediaItems, TimeLineAdapter.VideoViewHolder>
         }
     }
 
-    fun setOnClickTimeLineListener(listener: OnClickTimeLineListener){
+    fun setOnClickTimeLineListener(listener: ITouchListener){
         mOnClickTimeLineListener = listener
-        Log.i("dongdong","setOnClickTimeLineListener")
-    }
-
-    interface OnClickTimeLineListener {
-        fun onClick(uri: String, position: Int)
     }
 }

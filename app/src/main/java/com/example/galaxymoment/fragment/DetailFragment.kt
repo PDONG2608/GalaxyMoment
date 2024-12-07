@@ -9,17 +9,19 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.widget.ViewPager2
-import com.example.galaxymoment.adapter.PagerAdapterRCV
+import com.example.galaxymoment.adapter.ViewPagerAdapter
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.FragmentViewPager2Binding
+import com.example.galaxymoment.manager.ViewPagerManager
 import com.example.galaxymoment.utils.Constants.DEFAULT
 import com.example.galaxymoment.utils.Constants.SWIPE_PRE_POS
 import com.example.galaxymoment.utils.Constants.SWIPE_NEX_POS
-import com.example.galaxymoment.viewmodel.VideoViewModel
+import com.example.galaxymoment.viewmodel.TimelineViewModel
 
-class ViewPager2Fragment : Fragment() {
-    private lateinit var viewModel: VideoViewModel
-    private lateinit var viewPager : ViewPager2
+class DetailFragment : Fragment() {
+    private lateinit var adapter: ViewPagerAdapter
+    private lateinit var mTimelineViewModel: TimelineViewModel
+    private lateinit var mViewPager : ViewPager2
     private var _binding: FragmentViewPager2Binding? = null
     private val binding get() = _binding!!
     private var oldPosition = -1
@@ -32,16 +34,21 @@ class ViewPager2Fragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentViewPager2Binding.inflate(inflater, container, false)
-        viewModel = ViewModelProvider(requireActivity())[VideoViewModel::class.java]
-        viewPager = binding.fragmentViewPager2
-        val adapter = PagerAdapterRCV(viewModel.videoList.value as List<MediaItems>)
-        viewPager.adapter = adapter
-        viewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-        viewModel.videoList.observe(viewLifecycleOwner) {
-        }
-        viewPager.setCurrentItem(viewModel.currentPosPager.value!!, false)
-        viewPager.offscreenPageLimit = 1
+        initView()
         return binding.root
+    }
+
+    private fun initView() {
+//        val mViewPagerManager = ViewPagerManager(mTimelineViewModel, binding)
+        mTimelineViewModel = ViewModelProvider(requireActivity())[TimelineViewModel::class.java]
+        mViewPager = binding.fragmentViewPager2
+        adapter = ViewPagerAdapter(mTimelineViewModel.videoList.value as List<MediaItems>)
+        mViewPager.adapter = adapter
+        mViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+        mTimelineViewModel.videoList.observe(viewLifecycleOwner) {
+        }
+        mViewPager.setCurrentItem(mTimelineViewModel.currentPosPager.value!!, false)
+        mViewPager.offscreenPageLimit = 1
     }
 
 
@@ -51,11 +58,11 @@ class ViewPager2Fragment : Fragment() {
             binding.videoView.start()
         }
 
-        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
 
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
-                viewModel.setCurrentPosPager(position)
+                mTimelineViewModel.setCurrentPosPager(position)
                 playVideo(position)
             }
 
@@ -84,7 +91,7 @@ class ViewPager2Fragment : Fragment() {
     private var offSet = 0.0f
     private var offSetTmp = 0.0f
     private fun calculateOffsetVideo(position: Int, positionOffsetPixels: Int) {
-        if (position == viewModel.currentPosPager.value!!) {
+        if (position == mTimelineViewModel.currentPosPager.value!!) {
             if (positionOffsetPixels > oldOffSet) {
                 //swipe to right
                 oldOffSet = positionOffsetPixels
@@ -99,7 +106,7 @@ class ViewPager2Fragment : Fragment() {
                 binding.videoView.translationX = offSet
                 binding.fragmentViewPager2.translationX
             }
-        } else if (position + 1 == viewModel.currentPosPager.value!!) {
+        } else if (position + 1 == mTimelineViewModel.currentPosPager.value!!) {
             //swipe to left but difference position
             oldOffSet = positionOffsetPixels
             checkTypeSwipe = SWIPE_PRE_POS
@@ -117,7 +124,7 @@ class ViewPager2Fragment : Fragment() {
     }
 
     fun playVideo(position : Int){
-        binding.videoView.setVideoURI(Uri.parse(viewModel.videoList.value!![position].path))
+        binding.videoView.setVideoURI(Uri.parse(mTimelineViewModel.videoList.value!![position].path))
         binding.videoView.start()
     }
 }
