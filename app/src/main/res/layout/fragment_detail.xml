@@ -6,7 +6,7 @@
     tools:context=".fragment.DetailFragment">
 
     <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/fragmentViewPager2"
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="horizontal" />
@@ -38,7 +38,11 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_gravity="bottom"
-        android:visibility="gone" />
+        android:visibility="gone" >
+        <include
+            android:id="@+id/more_info_layout"
+            layout="@layout/more_info_layout"/>
+    </RelativeLayout>
 
     <Button
         android:id="@+id/button_open_moreinfo"

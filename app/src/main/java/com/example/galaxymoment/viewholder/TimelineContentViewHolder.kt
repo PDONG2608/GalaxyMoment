@@ -9,7 +9,7 @@ class TimelineContentViewHolder(private val binding: ItemContentTimeLineBinding)
     RecyclerView.ViewHolder(binding.root) {
     fun bindThumb(videoItem: TimeLineType.TypeContent) {
         Glide.with(binding.videoThumbnail.context)
-            .load(videoItem.mediaItems.path)
+            .load(videoItem.mediaItems.uri)
             .frame(0)
             .centerCrop()
             .into(binding.videoThumbnail)

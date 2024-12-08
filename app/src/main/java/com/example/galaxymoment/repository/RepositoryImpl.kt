@@ -34,6 +34,7 @@ class RepositoryImpl : IRepository {
 
     private fun getVideo(context: Context): ArrayList<MediaItems> {
         val projection = arrayOf(
+            MediaStore.Video.Media.DATA,
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DURATION,
             MediaStore.Video.Media.DATE_TAKEN
@@ -50,14 +51,16 @@ class RepositoryImpl : IRepository {
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
             val dateTaken = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
+            val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
-                val duration = cursor.getLong(durationColumn)
-                val date = cursor.getLong(dateTaken)
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
                     .appendPath(id.toString()).build().toString()
-                listItem.add(MediaItems(uri, duration, date, false))
+                val duration = cursor.getLong(durationColumn)
+                val date = cursor.getLong(dateTaken)
+                val path = cursor.getString(pathColumn)
+                listItem.add(MediaItems(uri, duration, date, path, false))
             }
         }
         return listItem

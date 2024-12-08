@@ -5,30 +5,30 @@ import android.os.Bundle
 import android.util.Log
 import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.ViewPagerAdapter
-import com.example.galaxymoment.data.MediaItems
-import com.example.galaxymoment.databinding.FragmentViewPager2Binding
+import com.example.galaxymoment.databinding.FragmentDetailBinding
 import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
 import com.example.galaxymoment.utils.LogicUtils
 import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class ViewPagerManager(
-    private val mTimelineViewModel: DetailViewModel,
-    private val binding: FragmentViewPager2Binding,
+    private val mDetailViewModel: DetailViewModel,
+    private val binding: FragmentDetailBinding,
     private val arguments: Bundle?
 ) {
     private lateinit var mTimelineUri: String
     private lateinit var adapter: ViewPagerAdapter
-    private var mViewPager: ViewPager2 = binding.fragmentViewPager2
+    private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
+    private lateinit var mDetailViewStub: MoreInfoManager
 
     init {
         arguments?.let {
             mTimelineUri = it.getString("timeLineUri").toString()
         }
-        val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mTimelineViewModel,mTimelineUri)
+        val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mDetailViewModel,mTimelineUri)
         Log.i("dongdong", "ViewPagerManager positionOpenDetailView = $positionOpenDetailView")
-        adapter = ViewPagerAdapter(mTimelineViewModel.getListItemDetail())
+        adapter = ViewPagerAdapter(mDetailViewModel.getListItemDetail())
         mViewPager.adapter = adapter
         mViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         mViewPager.setCurrentItem(positionOpenDetailView, false)
@@ -39,8 +39,10 @@ class ViewPagerManager(
     private fun viewPagerListener() {
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
+                Log.i("dongdong", "ViewPager2Fragment onPageSelected")
                 super.onPageSelected(position)
-                mTimelineViewModel.setCurrentPosPager(position)
+                mDetailViewStub = MoreInfoManager(mDetailViewModel, binding, position)
+                mDetailViewModel.setCurrentPosPager(position)
                 playVideo(position)
             }
 
@@ -55,7 +57,7 @@ class ViewPagerManager(
                 positionOffsetPixels: Int
             ) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                OffsetHelper.setOffSetForVideo(binding, mTimelineViewModel.currentPosPager.value!!, position, positionOffsetPixels)
+                OffsetHelper.setOffSetForVideo(binding, mDetailViewModel.currentPosPager.value!!, position, positionOffsetPixels)
                 if (OffsetHelper.checkTypeSwipe == Constants.DEFAULT) {
                     Log.i("dongdong", "setURI checkTypeSwipe : SWIPE_TO_RIGHT")
                     oldPosition = position
@@ -65,7 +67,7 @@ class ViewPagerManager(
         })
     }
     fun playVideo(position: Int) {
-        binding.videoView.setVideoURI(Uri.parse(mTimelineViewModel.listItemDetail.value!![position].path))
+        binding.videoView.setVideoURI(Uri.parse(mDetailViewModel.listItemDetail.value!![position].uri))
         binding.videoView.start()
     }
 

@@ -25,6 +25,9 @@ class DetailViewModel : ViewModel() {
     private val _currentPosPager = MutableLiveData<Int>()
     val currentPosPager: LiveData<Int> = _currentPosPager
 
+    private val _isShowMoreInfo = MutableLiveData(false)
+    val isShowMoreInfo: LiveData<Boolean> = _isShowMoreInfo
+
     fun setCurrentPosPager(position: Int) {
         _currentPosPager.value = position
     }
@@ -36,14 +39,8 @@ class DetailViewModel : ViewModel() {
         return _context.value
     }
 
-    fun getListItemTimeLine() : ArrayList<TimeLineType>{
-        if (_repo.value == null) {
-            _repo.value = RepositoryImpl()
-        }
-        if (_listItemTimeLine.value == null) {
-            _listItemTimeLine.value = _repo.value?.getListItemTimeLine(getContext()!!)
-        }
-        return _listItemTimeLine.value!!
+    fun setIsShowMoreInfo(isShow: Boolean) {
+        _isShowMoreInfo.value = isShow
     }
 
     fun getListItemDetail(): ArrayList<MediaItems> {

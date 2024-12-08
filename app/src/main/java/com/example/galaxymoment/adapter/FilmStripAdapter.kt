@@ -32,7 +32,7 @@ class FilmStripAdapter(private val mDetailViewModel: DetailViewModel) :
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         when(holder) {
             is FilmStripDummyViewHolder -> holder.bindDummy()
-            is FilmStripViewHolder -> holder.bindThumb(mDetailViewModel.listItemDetail.value!![position])
+            is FilmStripViewHolder -> holder.bindThumb(mDetailViewModel.listItemDetail.value!![position-1])
         }
     }
 

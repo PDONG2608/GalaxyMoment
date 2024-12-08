@@ -9,7 +9,7 @@ class FilmStripViewHolder (private val binding: ItemFilmStripBinding) :
     RecyclerView.ViewHolder(binding.root) {
     fun bindThumb(mediaItems: MediaItems) {
         Glide.with(binding.root.context)
-            .load(mediaItems.path)
+            .load(mediaItems.uri)
             .frame(0)
             .centerCrop()
             .into(binding.itemFilmStripImage)
