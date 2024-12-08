@@ -24,8 +24,7 @@ class ViewPagerManager(
     private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
     private lateinit var mNewViewHolder: ViewPagerViewHolder
-
-    private var oldViewHolder: ViewPagerViewHolder? = null
+    private var mListViewHolder = ArrayList<ViewPagerViewHolder>()
 
     init {
         arguments?.let {
@@ -41,8 +40,61 @@ class ViewPagerManager(
         viewPagerListener()
         buttonMoreInfoClick()
         moreInfoListener()
+        handleFilmStripScrolling()
     }
 
+    private fun handleFilmStripScrolling() {
+        mDetailViewModel.currentPosFilmStrip.observe(mDetailViewModel.getContext() as LifecycleOwner) {
+            mViewPager.setCurrentItem(it - 1, false)
+//            for (viewHolder in mListViewHolder) {
+//                viewHolder.stopVideo()
+//            }
+        }
+        mDetailViewModel.isFilmStripScrolling.observe(mDetailViewModel.getContext() as LifecycleOwner) {
+            if (it == true) {
+            } else {
+                for (viewHolder in mListViewHolder){
+                    viewHolder.stopVideo()
+                }
+                mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[mDetailViewModel.currentPosPager.value!!])
+            }
+        }
+    }
+
+    private fun viewPagerListener() {
+        mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                Log.i("dongdong", "ViewPager2Fragment onPageSelected " + position)
+                super.onPageSelected(position)
+                mDetailViewModel.setCurrentPosPager(position)
+                val recyclerView = mViewPager.getChildAt(0) as RecyclerView
+                if (recyclerView.findViewHolderForAdapterPosition(position) != null) {
+                    mNewViewHolder = recyclerView.findViewHolderForAdapterPosition(position) as ViewPagerViewHolder
+                    if (!mListViewHolder.contains(mNewViewHolder)) {
+                        mListViewHolder.add(mNewViewHolder)
+                    }
+                }
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+                Log.i("dongdong", "ViewPager2Fragment onPageScrollStateChanged state = $state position = $oldPosition")
+                super.onPageScrollStateChanged(state)
+            }
+
+            override fun onPageScrolled(
+                position: Int,
+                positionOffset: Float,
+                positionOffsetPixels: Int
+            ) {
+                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
+//                OffsetHelper.setOffSetForVideo(binding, mDetailViewModel.currentPosPager.value!!, position, positionOffsetPixels)
+                if (OffsetHelper.checkTypeSwipe == Constants.DEFAULT) {
+//                    Log.i("dongdong", "setURI checkTypeSwipe : SWIPE_TO_RIGHT")
+                    oldPosition = position
+                }
+            }
+        })
+    }
     private fun moreInfoListener() {
         mDetailViewModel.isShowMoreInfo.observe(mDetailViewModel.getContext() as LifecycleOwner) {
             if (it == true) {
@@ -61,39 +113,5 @@ class ViewPagerManager(
                 mDetailViewModel.setShowMoreInfo(true)
             }
         }
-    }
-    private fun viewPagerListener() {
-        mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
-            override fun onPageSelected(position: Int) {
-                Log.i("dongdong", "ViewPager2Fragment onPageSelected "+ position)
-                super.onPageSelected(position)
-                mDetailViewModel.setCurrentPosPager(position)
-                val recyclerView = mViewPager.getChildAt(0) as RecyclerView
-                mNewViewHolder = recyclerView.findViewHolderForAdapterPosition(position) as ViewPagerViewHolder
-                if (oldViewHolder != mNewViewHolder) {
-                    oldViewHolder?.stopVideo()
-                    mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[position])
-                    oldViewHolder = mNewViewHolder
-                }
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-                Log.i("dongdong", "ViewPager2Fragment onPageScrollStateChanged state = $state position = $oldPosition")
-                super.onPageScrollStateChanged(state)
-            }
-
-            override fun onPageScrolled(
-                position: Int,
-                positionOffset: Float,
-                positionOffsetPixels: Int
-            ) {
-                super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-//                OffsetHelper.setOffSetForVideo(binding, mDetailViewModel.currentPosPager.value!!, position, positionOffsetPixels)
-                if (OffsetHelper.checkTypeSwipe == Constants.DEFAULT) {
-                    Log.i("dongdong", "setURI checkTypeSwipe : SWIPE_TO_RIGHT")
-                    oldPosition = position
-                }
-            }
-        })
     }
 }

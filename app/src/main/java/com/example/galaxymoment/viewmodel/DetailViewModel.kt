@@ -1,7 +1,6 @@
 package com.example.galaxymoment.viewmodel
 
 import android.content.Context
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -23,11 +22,17 @@ class DetailViewModel : ViewModel() {
     private val _listItemDetail = MutableLiveData<ArrayList<MediaItems>>()
     val listItemDetail: LiveData<ArrayList<MediaItems>> = _listItemDetail
 
+    private val _currentPosFilmStrip = MutableLiveData<Int>()
+    val currentPosFilmStrip: LiveData<Int> = _currentPosFilmStrip
+
     private val _currentPosPager = MutableLiveData<Int>()
     val currentPosPager: LiveData<Int> = _currentPosPager
 
     private val _isShowMoreInfo = MutableLiveData<Boolean>()
     val isShowMoreInfo: LiveData<Boolean> = _isShowMoreInfo
+
+    private val _filmStripScrolling = MutableLiveData<Boolean>()
+    val isFilmStripScrolling: LiveData<Boolean> = _filmStripScrolling
 
     fun setShowMoreInfo(isShow: Boolean) {
         _isShowMoreInfo.value = isShow
@@ -52,5 +57,13 @@ class DetailViewModel : ViewModel() {
             _listItemDetail.value = _repo.value?.getListItemDetail(getContext()!!)
         }
         return _listItemDetail.value!!
+    }
+
+    fun setFilmStripScrolling(isScrolling: Boolean) {
+        _filmStripScrolling.value = isScrolling
+    }
+
+    fun setCurrentPosFilmStrip(pos: Int) {
+        _currentPosFilmStrip.value = pos
     }
 }

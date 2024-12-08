@@ -78,8 +78,10 @@ class ViewPagerViewHolder(
 
 
     fun stopVideo() {
-        binding.itemVideoView.stopPlayback()
-        binding.itemVideoView.alpha = 0f
+        if(binding.itemVideoView.isPlaying){
+            binding.itemVideoView.stopPlayback()
+            binding.itemVideoView.alpha = 0f
+        }
     }
 
     private fun showMoreInfo() {
