@@ -11,16 +11,6 @@
         android:layout_height="match_parent"
         android:orientation="horizontal" />
 
-
-    <VideoView
-        android:id="@+id/videoView"
-        android:layout_width="match_parent"
-        android:layout_gravity="center"
-        android:clickable="false"
-        android:focusable="false"
-        android:background="@android:color/transparent"
-        android:layout_height="match_parent"/>
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/film_strip"
         android:layout_gravity="bottom"
