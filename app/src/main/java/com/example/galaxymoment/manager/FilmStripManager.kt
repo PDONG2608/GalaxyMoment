@@ -25,7 +25,9 @@ class FilmStripManager(private val mDetailViewModel: DetailViewModel, private va
         mLayoutManager = LinearLayoutManager(mDetailViewModel.getContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.filmStrip.adapter = mAdapterFilmStrip
         binding.filmStrip.layoutManager = mLayoutManager
+        binding.filmStrip.setRecycledViewPool(RecyclerView.RecycledViewPool())
         binding.filmStrip.itemAnimator = null
+        binding.filmStrip.setHasFixedSize(true)
         snapHelper = LinearSnapHelper()
         snapHelper.attachToRecyclerView(binding.filmStrip)
     }

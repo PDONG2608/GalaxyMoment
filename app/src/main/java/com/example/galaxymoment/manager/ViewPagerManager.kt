@@ -37,6 +37,8 @@ class ViewPagerManager(
         mViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         mViewPager.setCurrentItem(positionOpenDetailView, false)
         mViewPager.offscreenPageLimit = 1
+        val recyclerView = mViewPager.getChildAt(0) as RecyclerView
+        recyclerView.setRecycledViewPool(RecyclerView.RecycledViewPool())
         viewPagerListener()
         buttonMoreInfoClick()
         moreInfoListener()
@@ -56,7 +58,9 @@ class ViewPagerManager(
                 for (viewHolder in mListViewHolder){
                     viewHolder.stopVideo()
                 }
-                mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[mDetailViewModel.currentPosPager.value!!])
+                if(mNewViewHolder != null){
+                    mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[mDetailViewModel.currentPosPager.value!!])
+                }
             }
         }
     }

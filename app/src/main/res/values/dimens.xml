@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="width_item_film_strip">58dp</dimen>
-    <dimen name="height_item_film_strip">46dp</dimen>
+    <dimen name="width_item_film_strip">54dp</dimen>
+    <dimen name="height_item_film_strip">42dp</dimen>
     <dimen name="height_detail_view">350dp</dimen>
 </resources>
