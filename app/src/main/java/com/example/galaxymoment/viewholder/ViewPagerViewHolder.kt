@@ -1,6 +1,14 @@
 package com.example.galaxymoment.viewholder
 
+import android.animation.ObjectAnimator
+import android.media.MediaMetadataRetriever
+import android.media.MediaPlayer.SEEK_CLOSEST
+import android.media.MediaPlayer.SEEK_CLOSEST_SYNC
+import android.media.MediaPlayer.SEEK_NEXT_SYNC
+import android.media.MediaPlayer.SEEK_PREVIOUS_SYNC
 import android.net.Uri
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -17,15 +25,25 @@ class ViewPagerViewHolder(private var binding: ItemViewPagerBinding) : RecyclerV
             .into(binding.singlePageImage)
     }
 
-    fun startVideo(item: MediaItems){
-        binding.itemVideoView.visibility = RecyclerView.VISIBLE
+    fun startVideo(item: MediaItems) {
         binding.itemVideoView.setVideoURI(Uri.parse(item.uri.toString()))
-        binding.itemVideoView.start()
+        binding.itemVideoView.setOnPreparedListener { mediaPlayer ->
+            mediaPlayer.start()
+            mediaPlayer.setVolume(0f, 0f)
+            Handler(Looper.getMainLooper()).postDelayed({
+                mediaPlayer.setVolume(1f, 1f)
+                mediaPlayer.seekTo(0, SEEK_CLOSEST)
+                ObjectAnimator.ofFloat(binding.itemVideoView, "alpha", 0f, 1f).apply {
+                    duration = 500
+                    start()
+                }
+            }, 500)
+        }
+
     }
 
     fun stopVideo(){
         binding.itemVideoView.stopPlayback()
-        binding.itemVideoView.visibility = RecyclerView.GONE
-        binding.itemVideoView.suspend()
+        binding.itemVideoView.alpha = 0f
     }
 }

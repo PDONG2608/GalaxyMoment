@@ -87,12 +87,14 @@ class ViewPagerManager(
                 if(state == ViewPager2.SCROLL_STATE_IDLE) {
                     val currentPosition = mViewPager.currentItem
                     val recyclerView = mViewPager.getChildAt(0) as RecyclerView
-                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(currentPosition)
-                    viewHolder?.let {
+                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(currentPosition) as ViewPagerViewHolder
+                    viewHolder.let {
                         Log.d("ViewPager2", "ViewHolder tại vị trí $currentPosition: $viewHolder")
-                        oldViewHolder?.stopVideo()
-                        (viewHolder as ViewPagerViewHolder).startVideo(mDetailViewModel.getListItemDetail()[currentPosition])
-                        oldViewHolder = viewHolder
+                        if (oldViewHolder != viewHolder) {
+                            oldViewHolder?.stopVideo()
+                            viewHolder.startVideo(mDetailViewModel.getListItemDetail()[currentPosition])
+                            oldViewHolder = viewHolder
+                        }
                     }
                 }
             }
