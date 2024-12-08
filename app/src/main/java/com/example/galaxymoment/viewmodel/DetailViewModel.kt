@@ -1,6 +1,7 @@
 package com.example.galaxymoment.viewmodel
 
 import android.content.Context
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -24,6 +25,13 @@ class DetailViewModel : ViewModel() {
 
     private val _currentPosPager = MutableLiveData<Int>()
     val currentPosPager: LiveData<Int> = _currentPosPager
+
+    private val _isShowMoreInfo = MutableLiveData<Boolean>()
+    val isShowMoreInfo: LiveData<Boolean> = _isShowMoreInfo
+
+    fun setShowMoreInfo(isShow: Boolean) {
+        _isShowMoreInfo.value = isShow
+    }
 
     fun setCurrentPosPager(position: Int) {
         _currentPosPager.value = position
