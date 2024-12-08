@@ -9,7 +9,7 @@ import com.example.galaxymoment.databinding.ItemViewPagerBinding
 class ViewPagerViewHolder(private var binding: ItemViewPagerBinding) : RecyclerView.ViewHolder(binding.root){
     fun bindView(item: MediaItems){
         Glide.with(binding.singlePageImage.context)
-            .load(Uri.parse(item.uri))
+            .load(item.uri)
             .frame(0)
             .fitCenter()
             .into(binding.singlePageImage)

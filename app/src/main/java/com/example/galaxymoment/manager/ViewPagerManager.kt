@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.ViewPagerAdapter
 import com.example.galaxymoment.databinding.FragmentDetailBinding
+import com.example.galaxymoment.utils.AnimationHelper
 import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
 import com.example.galaxymoment.utils.LogicUtils
@@ -34,6 +35,21 @@ class ViewPagerManager(
         mViewPager.setCurrentItem(positionOpenDetailView, false)
         mViewPager.offscreenPageLimit = 1
         viewPagerListener()
+        buttonMoreInfoListener()
+    }
+
+    private fun buttonMoreInfoListener() {
+        mDetailViewModel.isShowMoreInfo.observe(mDetailViewModel.getContext() as androidx.lifecycle.LifecycleOwner) { isShowMoreInfo ->
+            if (isShowMoreInfo) {
+                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 500, 400)
+                AnimationHelper.makeAnimationUpDown(binding.viewpager, 800, 400)
+                AnimationHelper.makeAnimationUpDown(binding.videoView, 800, 400)
+            } else {
+                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 500, 0, 400)
+                AnimationHelper.makeAnimationUpDown(binding.viewpager, -800, 400)
+                AnimationHelper.makeAnimationUpDown(binding.videoView, -800, 400)
+            }
+        }
     }
 
     private fun viewPagerListener() {
@@ -67,7 +83,7 @@ class ViewPagerManager(
         })
     }
     fun playVideo(position: Int) {
-        binding.videoView.setVideoURI(Uri.parse(mDetailViewModel.listItemDetail.value!![position].uri))
+        binding.videoView.setVideoURI(mDetailViewModel.listItemDetail.value!![position].uri)
         binding.videoView.start()
     }
 

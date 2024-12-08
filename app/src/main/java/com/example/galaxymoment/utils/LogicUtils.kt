@@ -1,9 +1,17 @@
 package com.example.galaxymoment.utils
 
+import android.annotation.SuppressLint
+import android.content.Context
+import android.media.MediaExtractor
+import android.media.MediaFormat
+import android.net.Uri
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.galaxymoment.adapter.TimeLineAdapter
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.viewmodel.DetailViewModel
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 class LogicUtils {
     companion object {
@@ -34,15 +42,15 @@ class LogicUtils {
          * @return position of item in recyclerView
          */
         fun calculatePositionOpenDetail(viewModel: DetailViewModel, mTimelineUri: String): Int {
-            return findSameItemPosition( viewModel.getListItemDetail(), mTimelineUri)
+            return findSameItemPosition(viewModel.getListItemDetail(), mTimelineUri)
         }
 
         private fun findSameItemPosition(
             listItemDetail: ArrayList<MediaItems>,
             mTimelineUri: String
-        ) : Int {
-            for ( i in listItemDetail.indices) {
-                if (listItemDetail[i].uri == mTimelineUri) return i
+        ): Int {
+            for (i in listItemDetail.indices) {
+                if (listItemDetail[i].uri.toString() == mTimelineUri) return i
             }
             return -1
         }
@@ -63,11 +71,53 @@ class LogicUtils {
             res += "\n"
             for (i in 1 until array.size - 1) {
                 res += array[i]
-                if(i != array.size - 2){
+                if (i != array.size - 2) {
                     res += "/"
                 }
             }
             return res
+        }
+
+        /**
+         * Converts a given time in milliseconds to a formatted date string.
+         *
+         * @param timeInMillis The time in milliseconds.
+         * @return A string representing the date in the format "EEEE, dd/MM/yyyy".
+         */
+        fun convertLongToDate(timeInMillis: Long): String {
+            val dateFormat = SimpleDateFormat("EEEE, dd/MM/yyyy", Locale.ENGLISH)
+            val date = Date(timeInMillis)
+            return dateFormat.format(date)
+        }
+
+
+        /**
+         * get video codec, fps from uri
+         * @param uri: uri of video
+         * @param context: context
+         * @return video codec
+         */
+        @SuppressLint("Recycle")
+        fun getCodecAndFps(uri: Uri, context: Context): String {
+            val extractor = MediaExtractor()
+            val fd = context.contentResolver.openFileDescriptor(uri, "r")?.fileDescriptor
+            if (fd != null) {
+                extractor.setDataSource(fd)
+            }
+            for (i in 0 until extractor.trackCount) {
+                val format = extractor.getTrackFormat(i)
+                if (format.getString(MediaFormat.KEY_MIME)?.startsWith("video/") == true) {
+                    val fps = format.getInteger(MediaFormat.KEY_FRAME_RATE)
+                    when (format.getString(MediaFormat.KEY_MIME)) {
+                        "video/avc" -> return "H.264/$fps"
+                        "video/hevc" -> return "H.265/$fps"
+                        "video/mpeg" -> return "MPEG/$fps"
+                        "video/mp4" -> return "MPEG-4/$fps"
+                    }
+                }
+            }
+            extractor.release()
+            return "Unknown Codec"
         }
     }
 }

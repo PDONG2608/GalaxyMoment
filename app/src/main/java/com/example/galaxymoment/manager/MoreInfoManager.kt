@@ -1,9 +1,8 @@
 package com.example.galaxymoment.manager
 
+import android.annotation.SuppressLint
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.databinding.FragmentDetailBinding
-import com.example.galaxymoment.utils.AnimationHelper
-import com.example.galaxymoment.utils.DateUtils
 import com.example.galaxymoment.utils.LogicUtils
 import com.example.galaxymoment.viewmodel.DetailViewModel
 
@@ -25,19 +24,20 @@ class MoreInfoManager(
 
     }
 
+    @SuppressLint("SetTextI18n")
     private fun setDataMoreInfo() {
-        binding.moreInfoLayout.moreInfoDate.text = DateUtils.convertLongToDate(mMediaItem.date)
+        binding.moreInfoLayout.moreInfoDate.text = LogicUtils.convertLongToDate(mMediaItem.date)
         binding.moreInfoLayout.moreInfoPath.text = LogicUtils.formatMoreInfoPath(mMediaItem.path)
+        binding.moreInfoLayout.moreInfoSize.text = mMediaItem.size.toString()
+        binding.moreInfoLayout.moreInfoResolution.text = mMediaItem.resolution
+        val codecFps = LogicUtils.getCodecAndFps(mMediaItem.uri, mDetailViewModel.getContext())
+        binding.moreInfoLayout.moreInfoCodec.text = codecFps.split("/")[0]
+        binding.moreInfoLayout.moreInfoFps.text = codecFps.split("/")[1] + " fps"
     }
 
     private fun buttonClickMoreInfo() {
         binding.buttonOpenMoreinfo.setOnClickListener {
-            if (mDetailViewModel.isShowMoreInfo.value == false) {
-                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 400, 400)
-            } else {
-                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 400, 0, 400)
-            }
-            mDetailViewModel.setIsShowMoreInfo(mDetailViewModel.isShowMoreInfo.value!!.not())
+            mDetailViewModel.setIsShowMoreInfo(mDetailViewModel.isShowMoreInfo.value != true)
         }
     }
 }

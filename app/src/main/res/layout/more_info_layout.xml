@@ -2,30 +2,62 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:paddingStart="10dp"
     android:layout_height="match_parent"
+    android:paddingStart="10dp"
     tools:ignore="RtlSymmetry">
+
     <TextView
         android:id="@+id/more_info_date"
-        android:textStyle="bold"
-        android:textSize="17sp"
-        android:textColor="@color/black"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="17sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/more_info_path"
         android:layout_width="wrap_content"
-        android:textColor="@color/black"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/more_info_date"
-        android:layout_height="wrap_content"/>
+        android:textColor="@color/black" />
+
     <TextView
-        android:textStyle="bold"
-        android:textSize="17sp"
+        android:id="@+id/info_video_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/more_info_path"
         android:text="Video Info"
         android:textColor="@color/black"
-        android:layout_below="@id/more_info_path"
+        android:textSize="17sp"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/more_info_size"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:layout_below="@id/info_video_title"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/more_info_resolution"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/more_info_size"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/more_info_codec"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/more_info_resolution"
+        android:textColor="@color/black" />
+
+    <TextView
+        android:id="@+id/more_info_fps"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/more_info_codec"
+        android:textColor="@color/black" />
+
 
 </RelativeLayout>

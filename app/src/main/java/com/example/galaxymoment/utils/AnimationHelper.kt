@@ -42,6 +42,28 @@ class AnimationHelper {
             animator.start()
         }
 
+
+        /**
+         * This function makes an animation that moves a view up or down.
+         * The direction of the animation is determined by the sign of the height parameter.
+         * A positive height will move the view down, a negative height will move the view up.
+         * The animation duration is given in milliseconds.
+         *
+         * @param view The view which will be animated.
+         * @param height The height of the animation in dp. If positive, the view will move down, if negative, the view will move up.
+         * @param duration The duration of the animation in milliseconds.
+         */
+        fun makeAnimationUpDown(view: View, height: Int, duration: Long) {
+            val currentY = view.y
+            val animator = ValueAnimator.ofFloat(currentY, currentY - height)
+            animator.duration = duration
+            animator.addUpdateListener { animation ->
+                val value = animation.animatedValue as Float
+                view.y = value
+            }
+            animator.start()
+        }
+
         private fun Int.dpToPx(): Int {
             return (this * Resources.getSystem().displayMetrics.density).toInt()
         }

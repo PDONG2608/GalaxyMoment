@@ -3,6 +3,9 @@ package com.example.galaxymoment.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
+import android.media.MediaExtractor
+import android.media.MediaFormat
+import android.net.Uri
 import android.provider.MediaStore
 import com.example.galaxymoment.callback.IRepository
 import com.example.galaxymoment.data.HeaderItem
@@ -37,7 +40,9 @@ class RepositoryImpl : IRepository {
             MediaStore.Video.Media.DATA,
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DURATION,
-            MediaStore.Video.Media.DATE_TAKEN
+            MediaStore.Video.Media.DATE_TAKEN,
+            MediaStore.Video.Media.SIZE,
+            MediaStore.Video.Media.RESOLUTION,
         )
         val cursor: Cursor? = context.contentResolver.query(
             MediaStore.Video.Media.EXTERNAL_CONTENT_URI,
@@ -52,15 +57,33 @@ class RepositoryImpl : IRepository {
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
             val dateTaken = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
             val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
+            val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
+            val resolutionColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)
 
             while (cursor.moveToNext()) {
                 val id = cursor.getLong(idColumn)
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
-                    .appendPath(id.toString()).build().toString()
+                    .appendPath(id.toString()).build()
                 val duration = cursor.getLong(durationColumn)
                 val date = cursor.getLong(dateTaken)
                 val path = cursor.getString(pathColumn)
-                listItem.add(MediaItems(uri, duration, date, path, false))
+                val size = cursor.getLong(sizeColumn)
+                val resolution = cursor.getString(resolutionColumn)
+                val videoCodec = "abc"
+                val videoFps = 111
+                listItem.add(
+                    MediaItems(
+                        uri,
+                        duration,
+                        date,
+                        path,
+                        size,
+                        resolution,
+                        videoCodec,
+                        videoFps,
+                        false
+                    )
+                )
             }
         }
         return listItem
