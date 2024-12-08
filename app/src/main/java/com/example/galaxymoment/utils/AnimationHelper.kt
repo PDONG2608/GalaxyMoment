@@ -67,5 +67,40 @@ class AnimationHelper {
         private fun Int.dpToPx(): Int {
             return (this * Resources.getSystem().displayMetrics.density).toInt()
         }
+
+        /**
+         * This function makes an animation that fades a view in by changing its alpha from 0 to 1.
+         * The animation duration is given in milliseconds.
+         *
+         * @param view The view which will be animated.
+         * @param duration The duration of the animation in milliseconds.
+         */
+        fun makeAnimationFadeIn(view: View, duration: Long) {
+            val animator = ValueAnimator.ofFloat(0f, 1f)
+            animator.duration = duration
+            animator.addUpdateListener { animation ->
+                val value = animation.animatedValue as Float
+                view.alpha = value
+            }
+            animator.start()
+        }
+
+
+        /**
+         * This function makes an animation that fades a view out by changing its alpha from 1 to 0.
+         * The animation duration is given in milliseconds.
+         *
+         * @param view The view which will be animated.
+         * @param duration The duration of the animation in milliseconds.
+         */
+        fun makeAnimationFadeOut(view: View, duration: Long) {
+            val animator = ValueAnimator.ofFloat(1f, 0f)
+            animator.duration = duration
+            animator.addUpdateListener { animation ->
+                val value = animation.animatedValue as Float
+                view.alpha = value
+            }
+            animator.start()
+        }
     }
 }
