@@ -25,7 +25,7 @@ class DetailViewModel : ViewModel() {
     private val _currentPosPager = MutableLiveData<Int>()
     val currentPosPager: LiveData<Int> = _currentPosPager
 
-    private val _isShowMoreInfo = MutableLiveData(false)
+    private val _isShowMoreInfo = MutableLiveData<Boolean>()
     val isShowMoreInfo: LiveData<Boolean> = _isShowMoreInfo
 
     fun setCurrentPosPager(position: Int) {
@@ -35,8 +35,8 @@ class DetailViewModel : ViewModel() {
     fun setContext(context: Context) {
         _context.value = context
     }
-    fun getContext(): Context? {
-        return _context.value
+    fun getContext(): Context {
+        return _context.value!!
     }
 
     fun setIsShowMoreInfo(isShow: Boolean) {

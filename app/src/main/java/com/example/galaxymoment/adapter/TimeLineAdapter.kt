@@ -45,7 +45,7 @@ class TimeLineAdapter(private val mTimelineViewModel: TimelineViewModel) :
        }
         holder.itemView.setOnClickListener {
             if(mTimelineViewModel.getListItemTimeLine()[position] is TimeLineType.TypeContent) {
-                mITouchListener.onClickTimeline((mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeContent).mediaItems.uri, position)
+                mITouchListener.onClickTimeline((mTimelineViewModel.getListItemTimeLine()[position] as TimeLineType.TypeContent).mediaItems.uri.toString(), position)
             }
         }
     }

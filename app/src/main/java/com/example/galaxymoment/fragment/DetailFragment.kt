@@ -42,4 +42,5 @@ class DetailFragment : Fragment() {
         mViewPagerManager = ViewPagerManager(mDetailViewModel, binding, arguments)
         mFilmStripManager = FilmStripManager(mDetailViewModel, binding)
     }
+
 }
