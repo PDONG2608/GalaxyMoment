@@ -20,8 +20,6 @@ class MoreInfoManager(
 
     private fun initView() {
         setDataMoreInfo()
-        buttonClickMoreInfo()
-
     }
 
     @SuppressLint("SetTextI18n")
@@ -33,11 +31,5 @@ class MoreInfoManager(
         val codecFps = LogicUtils.getCodecAndFps(mMediaItem.uri, mDetailViewModel.getContext())
         binding.moreInfoLayout.moreInfoCodec.text = codecFps.split("/")[0]
         binding.moreInfoLayout.moreInfoFps.text = codecFps.split("/")[1] + " fps"
-    }
-
-    private fun buttonClickMoreInfo() {
-        binding.buttonOpenMoreinfo.setOnClickListener {
-            mDetailViewModel.setIsShowMoreInfo(mDetailViewModel.isShowMoreInfo.value != true)
-        }
     }
 }
