@@ -3,6 +3,7 @@ package com.example.galaxymoment.manager
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.ViewPagerAdapter
 import com.example.galaxymoment.databinding.FragmentDetailBinding
@@ -11,6 +12,7 @@ import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
 import com.example.galaxymoment.utils.LogicUtils
 import com.example.galaxymoment.utils.OnSwipeTouchListener
+import com.example.galaxymoment.viewholder.ViewPagerViewHolder
 import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class ViewPagerManager(
@@ -19,7 +21,7 @@ class ViewPagerManager(
     private val arguments: Bundle?
 ) {
     private lateinit var mTimelineUri: String
-    private lateinit var adapter: ViewPagerAdapter
+    private lateinit var mViewPagerAdapter: ViewPagerAdapter
     private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
     private lateinit var mDetailViewStub: MoreInfoManager
@@ -31,8 +33,8 @@ class ViewPagerManager(
         }
         val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mDetailViewModel,mTimelineUri)
         Log.i("dongdong", "ViewPagerManager positionOpenDetailView = $positionOpenDetailView")
-        adapter = ViewPagerAdapter(mDetailViewModel.getListItemDetail())
-        mViewPager.adapter = adapter
+        mViewPagerAdapter = ViewPagerAdapter(mDetailViewModel.getListItemDetail())
+        mViewPager.adapter = mViewPagerAdapter
         mViewPager.orientation = ViewPager2.ORIENTATION_HORIZONTAL
         mViewPager.setCurrentItem(positionOpenDetailView, false)
         mViewPager.offscreenPageLimit = 1
@@ -69,6 +71,7 @@ class ViewPagerManager(
         }
     }
 
+    private var oldViewHolder: ViewPagerViewHolder? = null
     private fun viewPagerListener() {
         mViewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
@@ -76,12 +79,22 @@ class ViewPagerManager(
                 super.onPageSelected(position)
                 mDetailViewStub = MoreInfoManager(mDetailViewModel, binding, position)
                 mDetailViewModel.setCurrentPosPager(position)
-                playVideo(position)
             }
 
             override fun onPageScrollStateChanged(state: Int) {
                 Log.i("dongdong", "ViewPager2Fragment onPageScrollStateChanged state = $state position = $oldPosition")
                 super.onPageScrollStateChanged(state)
+                if(state == ViewPager2.SCROLL_STATE_IDLE) {
+                    val currentPosition = mViewPager.currentItem
+                    val recyclerView = mViewPager.getChildAt(0) as RecyclerView
+                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(currentPosition)
+                    viewHolder?.let {
+                        Log.d("ViewPager2", "ViewHolder tại vị trí $currentPosition: $viewHolder")
+                        oldViewHolder?.stopVideo()
+                        (viewHolder as ViewPagerViewHolder).startVideo(mDetailViewModel.getListItemDetail()[currentPosition])
+                        oldViewHolder = viewHolder
+                    }
+                }
             }
 
             override fun onPageScrolled(
@@ -90,31 +103,24 @@ class ViewPagerManager(
                 positionOffsetPixels: Int
             ) {
                 super.onPageScrolled(position, positionOffset, positionOffsetPixels)
-                OffsetHelper.setOffSetForVideo(binding, mDetailViewModel.currentPosPager.value!!, position, positionOffsetPixels)
+//                OffsetHelper.setOffSetForVideo(binding, mDetailViewModel.currentPosPager.value!!, position, positionOffsetPixels)
                 if (OffsetHelper.checkTypeSwipe == Constants.DEFAULT) {
                     Log.i("dongdong", "setURI checkTypeSwipe : SWIPE_TO_RIGHT")
                     oldPosition = position
-                    playVideo(position)
                 }
             }
         })
     }
 
-    fun playVideo(position: Int) {
-        binding.videoView.setVideoURI(mDetailViewModel.listItemDetail.value!![position].uri)
-        binding.videoView.start()
-    }
 
     private fun showMoreInfo() {
         AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 500, 400)
         AnimationHelper.makeAnimationUpDown(binding.viewpager, 800, 400)
-        AnimationHelper.makeAnimationUpDown(binding.videoView, 800, 400)
     }
 
     private fun hideMoreInfo() {
         AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 500, 0, 400)
         AnimationHelper.makeAnimationUpDown(binding.viewpager, -800, 400)
-        AnimationHelper.makeAnimationUpDown(binding.videoView, -800, 400)
     }
 
 }

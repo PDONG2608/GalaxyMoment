@@ -31,9 +31,6 @@ class DetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initView(arguments)
-        binding.videoView.setOnCompletionListener {
-            binding.videoView.start()
-        }
     }
 
     private fun initView(arguments: Bundle?) {
