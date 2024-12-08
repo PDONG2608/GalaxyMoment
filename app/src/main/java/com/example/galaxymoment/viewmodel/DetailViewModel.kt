@@ -25,9 +25,6 @@ class DetailViewModel : ViewModel() {
     private val _currentPosPager = MutableLiveData<Int>()
     val currentPosPager: LiveData<Int> = _currentPosPager
 
-    private val _isShowMoreInfo = MutableLiveData<Boolean>()
-    val isShowMoreInfo: LiveData<Boolean> = _isShowMoreInfo
-
     fun setCurrentPosPager(position: Int) {
         _currentPosPager.value = position
     }
@@ -37,10 +34,6 @@ class DetailViewModel : ViewModel() {
     }
     fun getContext(): Context {
         return _context.value!!
-    }
-
-    fun setIsShowMoreInfo(isShow: Boolean) {
-        _isShowMoreInfo.value = isShow
     }
 
     fun getListItemDetail(): ArrayList<MediaItems> {

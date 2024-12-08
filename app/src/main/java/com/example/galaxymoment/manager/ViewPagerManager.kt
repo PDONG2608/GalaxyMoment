@@ -1,6 +1,6 @@
 package com.example.galaxymoment.manager
 
-import android.net.Uri
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import androidx.viewpager2.widget.ViewPager2
@@ -10,6 +10,7 @@ import com.example.galaxymoment.utils.AnimationHelper
 import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
 import com.example.galaxymoment.utils.LogicUtils
+import com.example.galaxymoment.utils.OnSwipeTouchListener
 import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class ViewPagerManager(
@@ -22,6 +23,7 @@ class ViewPagerManager(
     private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
     private lateinit var mDetailViewStub: MoreInfoManager
+    private var isShowMoreInfo = false
 
     init {
         arguments?.let {
@@ -36,19 +38,34 @@ class ViewPagerManager(
         mViewPager.offscreenPageLimit = 1
         viewPagerListener()
         buttonMoreInfoListener()
+        swipeUpDownVideo()
+    }
+
+    @SuppressLint("ClickableViewAccessibility")
+    private fun swipeUpDownVideo() {
+        binding.viewpager.setOnTouchListener(object : OnSwipeTouchListener( binding.viewpager.context) {
+            override fun onSwipeTop() {
+                Log.i("dongdong", "onSwipeTop")
+                showMoreInfo()
+            }
+
+            override fun onSwipeBottom() {
+                Log.i("dongdong", "onSwipeBottom")
+                hideMoreInfo()
+            }
+            override fun onSwipeRight() {
+                Log.i("dongdong", "onSwipeRight")
+            }
+            override fun onSwipeLeft() {
+                Log.i("dongdong", "onSwipeLeft")
+            }
+        })
     }
 
     private fun buttonMoreInfoListener() {
-        mDetailViewModel.isShowMoreInfo.observe(mDetailViewModel.getContext() as androidx.lifecycle.LifecycleOwner) { isShowMoreInfo ->
-            if (isShowMoreInfo) {
-                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 500, 400)
-                AnimationHelper.makeAnimationUpDown(binding.viewpager, 800, 400)
-                AnimationHelper.makeAnimationUpDown(binding.videoView, 800, 400)
-            } else {
-                AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 500, 0, 400)
-                AnimationHelper.makeAnimationUpDown(binding.viewpager, -800, 400)
-                AnimationHelper.makeAnimationUpDown(binding.videoView, -800, 400)
-            }
+        binding.buttonOpenMoreinfo.setOnClickListener {
+            isShowMoreInfo = !isShowMoreInfo
+            if (isShowMoreInfo) showMoreInfo() else hideMoreInfo()
         }
     }
 
@@ -82,9 +99,22 @@ class ViewPagerManager(
             }
         })
     }
+
     fun playVideo(position: Int) {
         binding.videoView.setVideoURI(mDetailViewModel.listItemDetail.value!![position].uri)
         binding.videoView.start()
+    }
+
+    private fun showMoreInfo() {
+        AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 500, 400)
+        AnimationHelper.makeAnimationUpDown(binding.viewpager, 800, 400)
+        AnimationHelper.makeAnimationUpDown(binding.videoView, 800, 400)
+    }
+
+    private fun hideMoreInfo() {
+        AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 500, 0, 400)
+        AnimationHelper.makeAnimationUpDown(binding.viewpager, -800, 400)
+        AnimationHelper.makeAnimationUpDown(binding.videoView, -800, 400)
     }
 
 }
