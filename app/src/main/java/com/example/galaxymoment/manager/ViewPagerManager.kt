@@ -24,8 +24,7 @@ class ViewPagerManager(
     private lateinit var mViewPagerAdapter: ViewPagerAdapter
     private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
-    private lateinit var mDetailViewStub: MoreInfoManager
-    private var isShowMoreInfo = false
+    private lateinit var mNewViewHolder: ViewPagerViewHolder
 
     init {
         arguments?.let {
@@ -40,34 +39,11 @@ class ViewPagerManager(
         mViewPager.offscreenPageLimit = 1
         viewPagerListener()
         buttonMoreInfoListener()
-        swipeUpDownVideo()
-    }
-
-    @SuppressLint("ClickableViewAccessibility")
-    private fun swipeUpDownVideo() {
-        binding.viewpager.setOnTouchListener(object : OnSwipeTouchListener( binding.viewpager.context) {
-            override fun onSwipeTop() {
-                Log.i("dongdong", "onSwipeTop")
-                showMoreInfo()
-            }
-
-            override fun onSwipeBottom() {
-                Log.i("dongdong", "onSwipeBottom")
-                hideMoreInfo()
-            }
-            override fun onSwipeRight() {
-                Log.i("dongdong", "onSwipeRight")
-            }
-            override fun onSwipeLeft() {
-                Log.i("dongdong", "onSwipeLeft")
-            }
-        })
     }
 
     private fun buttonMoreInfoListener() {
         binding.buttonOpenMoreinfo.setOnClickListener {
-            isShowMoreInfo = !isShowMoreInfo
-            if (isShowMoreInfo) showMoreInfo() else hideMoreInfo()
+           LogicUtils.isShowMoreInfo = !LogicUtils.isShowMoreInfo
         }
     }
 
@@ -77,7 +53,6 @@ class ViewPagerManager(
             override fun onPageSelected(position: Int) {
                 Log.i("dongdong", "ViewPager2Fragment onPageSelected")
                 super.onPageSelected(position)
-                mDetailViewStub = MoreInfoManager(mDetailViewModel, binding, position)
                 mDetailViewModel.setCurrentPosPager(position)
             }
 
@@ -87,13 +62,12 @@ class ViewPagerManager(
                 if(state == ViewPager2.SCROLL_STATE_IDLE) {
                     val currentPosition = mViewPager.currentItem
                     val recyclerView = mViewPager.getChildAt(0) as RecyclerView
-                    val viewHolder = recyclerView.findViewHolderForAdapterPosition(currentPosition) as ViewPagerViewHolder
-                    viewHolder.let {
-                        Log.d("ViewPager2", "ViewHolder tại vị trí $currentPosition: $viewHolder")
-                        if (oldViewHolder != viewHolder) {
+                    mNewViewHolder = recyclerView.findViewHolderForAdapterPosition(currentPosition) as ViewPagerViewHolder
+                    mNewViewHolder.let {
+                        if (oldViewHolder != mNewViewHolder) {
                             oldViewHolder?.stopVideo()
-                            viewHolder.startVideo(mDetailViewModel.getListItemDetail()[currentPosition])
-                            oldViewHolder = viewHolder
+                            mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[currentPosition])
+                            oldViewHolder = mNewViewHolder
                         }
                     }
                 }
@@ -113,16 +87,4 @@ class ViewPagerManager(
             }
         })
     }
-
-
-    private fun showMoreInfo() {
-        AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 0, 500, 400)
-        AnimationHelper.makeAnimationUpDown(binding.viewpager, 800, 400)
-    }
-
-    private fun hideMoreInfo() {
-        AnimationHelper.makeAnimationChangeHeight(binding.moreInfoView, 500, 0, 400)
-        AnimationHelper.makeAnimationUpDown(binding.viewpager, -800, 400)
-    }
-
 }

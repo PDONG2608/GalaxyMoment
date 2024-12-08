@@ -2,17 +2,13 @@ package com.example.galaxymoment.manager
 
 import android.annotation.SuppressLint
 import com.example.galaxymoment.data.MediaItems
-import com.example.galaxymoment.databinding.FragmentDetailBinding
+import com.example.galaxymoment.databinding.ItemViewPagerBinding
 import com.example.galaxymoment.utils.LogicUtils
-import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class MoreInfoManager(
-    private val mDetailViewModel: DetailViewModel,
-    private val binding: FragmentDetailBinding,
-    private val position: Int
+    private val mMediaItem: MediaItems,
+    private val binding: ItemViewPagerBinding,
 ) {
-
-    private var mMediaItem : MediaItems = mDetailViewModel.getListItemDetail()[position]
 
     init {
         initView()
@@ -28,7 +24,7 @@ class MoreInfoManager(
         binding.moreInfoLayout.moreInfoPath.text = LogicUtils.formatMoreInfoPath(mMediaItem.path)
         binding.moreInfoLayout.moreInfoSize.text = mMediaItem.size.toString()
         binding.moreInfoLayout.moreInfoResolution.text = mMediaItem.resolution
-        val codecFps = LogicUtils.getCodecAndFps(mMediaItem.uri, mDetailViewModel.getContext())
+        val codecFps = LogicUtils.getCodecAndFps(mMediaItem.uri, binding.moreInfoView.context)
         binding.moreInfoLayout.moreInfoCodec.text = codecFps.split("/")[0]
         binding.moreInfoLayout.moreInfoFps.text = codecFps.split("/")[1] + " fps"
     }

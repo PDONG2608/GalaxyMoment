@@ -17,4 +17,15 @@
         android:layout_gravity="center"
         android:alpha="0"
         android:background="@android:color/transparent" />
+
+    <RelativeLayout
+        android:id="@+id/more_info_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_gravity="bottom"
+        android:visibility="gone" >
+        <include
+            android:id="@+id/more_info_layout"
+            layout="@layout/more_info_layout"/>
+    </RelativeLayout>
 </FrameLayout>
