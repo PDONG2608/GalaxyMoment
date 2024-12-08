@@ -3,9 +3,6 @@ package com.example.galaxymoment.repository
 import android.annotation.SuppressLint
 import android.content.Context
 import android.database.Cursor
-import android.media.MediaExtractor
-import android.media.MediaFormat
-import android.net.Uri
 import android.provider.MediaStore
 import com.example.galaxymoment.callback.IRepository
 import com.example.galaxymoment.data.HeaderItem
@@ -41,6 +38,8 @@ class RepositoryImpl : IRepository {
             MediaStore.Video.Media._ID,
             MediaStore.Video.Media.DURATION,
             MediaStore.Video.Media.DATE_TAKEN,
+            MediaStore.Video.Media.DATE_ADDED,
+            MediaStore.Video.Media.DATE_MODIFIED,
             MediaStore.Video.Media.SIZE,
             MediaStore.Video.Media.RESOLUTION,
         )
@@ -55,7 +54,9 @@ class RepositoryImpl : IRepository {
         cursor?.use {
             val idColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media._ID)
             val durationColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DURATION)
-            val dateTaken = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
+            val dateTakenColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_TAKEN)
+            val dateAddedColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_ADDED)
+            val dateModifiedColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATE_MODIFIED)
             val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
             val resolutionColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)
@@ -65,17 +66,20 @@ class RepositoryImpl : IRepository {
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
                     .appendPath(id.toString()).build()
                 val duration = cursor.getLong(durationColumn)
-                val date = cursor.getLong(dateTaken)
+                val dateTaken = cursor.getLong(dateTakenColumn)
+                val dateAdded = cursor.getLong(dateAddedColumn)
+                var dateModified = cursor.getLong(dateModifiedColumn)
                 val path = cursor.getString(pathColumn)
                 val size = cursor.getLong(sizeColumn)
                 val resolution = cursor.getString(resolutionColumn)
                 val videoCodec = "abc"
                 val videoFps = 111
+                val resDate = if(dateTaken != 0L) dateTaken else dateAdded
                 listItem.add(
                     MediaItems(
                         uri,
                         duration,
-                        date,
+                        resDate,
                         path,
                         size,
                         resolution,
