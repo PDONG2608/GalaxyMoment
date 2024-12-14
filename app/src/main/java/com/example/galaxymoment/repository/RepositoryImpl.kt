@@ -54,7 +54,7 @@ class RepositoryImpl : IRepository {
 
 
     private fun getVideo(context: Context): ArrayList<MediaItems> {
-        val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested")
+        val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested", "good", "bad", "excited", "boring", "funny", "crazy")
         val projection = arrayOf(
             MediaStore.Video.Media.DATA,
             MediaStore.Video.Media._ID,

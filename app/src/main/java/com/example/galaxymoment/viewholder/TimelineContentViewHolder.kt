@@ -1,5 +1,6 @@
 package com.example.galaxymoment.viewholder
 
+import android.widget.ImageView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.galaxymoment.data.TimeLineType
@@ -13,5 +14,9 @@ class TimelineContentViewHolder(private val binding: ItemContentTimeLineBinding)
             .frame(0)
             .centerCrop()
             .into(binding.videoThumbnail)
+    }
+
+    fun getView(): ImageView {
+        return binding.videoThumbnail
     }
 }

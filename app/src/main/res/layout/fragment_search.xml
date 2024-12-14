@@ -4,19 +4,12 @@
     android:layout_height="match_parent"
     tools:context=".fragment.SearchFragment">
 
-    <FrameLayout
+    <LinearLayout
         android:id="@+id/searchViewContainer"
         android:layout_width="match_parent"
         android:layout_height="50dp"
-        android:layout_margin="8dp">
-
-        <EditText
-            android:id="@+id/searchView"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:hint="Search"
-            android:imeOptions="actionSearch"
-            android:inputType="text" />
+        android:layout_margin="8dp"
+        android:orientation="horizontal">
 
         <HorizontalScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/chip_view_search"
@@ -30,7 +23,15 @@
                 android:orientation="horizontal"
                 app:singleLine="true" />
         </HorizontalScrollView>
-    </FrameLayout>
+
+        <AutoCompleteTextView
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
+
+    </LinearLayout>
 
     <HorizontalScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/chipView"

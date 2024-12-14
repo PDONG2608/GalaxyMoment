@@ -1,11 +1,17 @@
 package com.example.galaxymoment.fragment
 
 import android.annotation.SuppressLint
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.galaxymoment.R
@@ -23,7 +29,7 @@ class SearchFragment : Fragment() {
     private var mMediaItems = ArrayList<MediaItems>()
     private var mTimeLineItem = ArrayList<TimeLineType>()
     private var viewModel: DetailViewModel? = null
-    private val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested")
+    private val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested", "good", "bad", "excited", "boring", "funny", "crazy")
     private val _binding : FragmentSearchBinding by lazy { FragmentSearchBinding.bind(requireView()) }
     private val binding get() = _binding
 
@@ -70,16 +76,25 @@ class SearchFragment : Fragment() {
                 binding.chipGroup.addView(chip)
             }
             chip.setOnClickListener {
-                if(chip.parent == binding.chipGroup) {
-                    binding.chipGroup.removeView(chip)
-                    binding.chipGroupSearch.addView(chip)
-                } else if( chip.parent == binding.chipGroupSearch) {
-                    binding.chipGroupSearch.removeView(chip)
-                    binding.chipGroup.addView(chip)
-                }
-                reloadData()
+                handleCaseSearch(chip)
             }
         }
+    }
+
+    private fun handleCaseSearch(chip: Chip) {
+        if(chip.parent == binding.chipGroup) {
+            binding.chipGroup.removeView(chip)
+            binding.chipGroupSearch.addView(chip)
+        } else if( chip.parent == binding.chipGroupSearch) {
+            binding.chipGroupSearch.removeView(chip)
+            binding.chipGroup.addView(chip)
+        }
+        if (binding.chipGroupSearch.childCount == 0) {
+            binding.searchView.hint = "Search"
+        } else {
+            binding.searchView.hint = ""
+        }
+        reloadData()
     }
 
     private fun reloadData() {
@@ -99,5 +114,26 @@ class SearchFragment : Fragment() {
         binding.recyclerView.layoutManager = mLayoutManager
         binding.recyclerView.itemAnimator = DefaultItemAnimator()
         LogicUtils.setSpanSize(searchAdapter, mLayoutManager, 4)
+
+        //load recycle view for edittext
+        val adapter = ArrayAdapter(requireContext(), R.layout.search_drop_down_item, chipLabels)
+        binding.searchView.threshold = 1
+        binding.searchView.setAdapter(adapter)
+        binding.searchView.setTextColor(Color.BLACK)
+        //click a item of dropdown
+
+        binding.searchView.setOnItemClickListener { parent, view, position, id ->
+            val selectedItem = parent.getItemAtPosition(position) as String
+            binding.searchView.setText(selectedItem)
+            for (i in 0 until binding.chipGroup.childCount) {
+                if (binding.chipGroup.getChildAt(i) is Chip) {
+                    val chip = binding.chipGroup.getChildAt(i) as Chip
+                    if (chip.text == selectedItem) {
+                        handleCaseSearch(chip)
+                    }
+                }
+            }
+            binding.searchView.setText("")
+        }
     }
 }

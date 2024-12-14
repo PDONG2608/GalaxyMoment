@@ -48,7 +48,7 @@ class ViewPagerManager(
 
     private fun handleFilmStripScrolling() {
         mDetailViewModel.currentPosFilmStrip.observe(mDetailViewModel.getContext() as LifecycleOwner) {
-            mViewPager.setCurrentItem(it - 1, false)
+//            mViewPager.setCurrentItem(it - 1, false)
 //            for (viewHolder in mListViewHolder) {
 //                viewHolder.stopVideo()
 //            }
@@ -122,7 +122,7 @@ class ViewPagerManager(
 
     private fun observe() {
         mDetailViewModel.currentPosPager.observe(mDetailViewModel.getContext() as LifecycleOwner) {position ->
-           mViewPager.setCurrentItem(position, false)
+//           mViewPager.setCurrentItem(position, false)
         }
     }
 }
