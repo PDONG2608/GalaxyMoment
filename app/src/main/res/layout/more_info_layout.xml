@@ -11,12 +11,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/black"
+        android:text="date"
         android:textSize="17sp"
         android:textStyle="bold" />
 
     <TextView
         android:id="@+id/more_info_path"
         android:layout_width="wrap_content"
+        android:text="path"
         android:layout_height="wrap_content"
         android:layout_below="@+id/more_info_date"
         android:textColor="@color/black" />
@@ -35,6 +37,7 @@
         android:id="@+id/more_info_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="size"
         android:layout_below="@id/info_video_title"
         android:textColor="@color/black" />
 
@@ -42,6 +45,7 @@
         android:id="@+id/more_info_resolution"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="resolution"
         android:layout_below="@id/more_info_size"
         android:textColor="@color/black" />
 
@@ -49,6 +53,7 @@
         android:id="@+id/more_info_codec"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="codec"
         android:layout_below="@id/more_info_resolution"
         android:textColor="@color/black" />
 
@@ -56,8 +61,26 @@
         android:id="@+id/more_info_fps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="fps"
         android:layout_below="@id/more_info_codec"
         android:textColor="@color/black" />
+
+    <HorizontalScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_below="@+id/more_info_fps"
+        android:id="@+id/horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="8dp">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:singleLine="true"/>
+
+    </HorizontalScrollView>
 
 
 </RelativeLayout>

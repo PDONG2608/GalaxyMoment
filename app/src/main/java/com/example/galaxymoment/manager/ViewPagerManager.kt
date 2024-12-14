@@ -58,9 +58,9 @@ class ViewPagerManager(
                 for (viewHolder in mListViewHolder){
                     viewHolder.stopVideo()
                 }
-                if(mNewViewHolder != null){
-                    mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[mDetailViewModel.currentPosPager.value!!])
-                }
+//                if(mNewViewHolder != null){
+//                    mNewViewHolder.startVideo(mDetailViewModel.getListItemDetail()[mDetailViewModel.currentPosPager.value!!])
+//                }
             }
         }
     }

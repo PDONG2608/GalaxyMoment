@@ -8,6 +8,7 @@ import com.example.galaxymoment.callback.IRepository
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.repository.RepositoryImpl
+import java.util.TreeMap
 
 
 class DetailViewModel : ViewModel() {
@@ -34,6 +35,9 @@ class DetailViewModel : ViewModel() {
     private val _filmStripScrolling = MutableLiveData<Boolean>()
     val isFilmStripScrolling: LiveData<Boolean> = _filmStripScrolling
 
+    private val _treeMapTag = MutableLiveData<TreeMap<String, ArrayList<MediaItems>>>()
+    val treeMapTag: LiveData<TreeMap<String, ArrayList<MediaItems>>> = _treeMapTag
+
     fun setShowMoreInfo(isShow: Boolean) {
         _isShowMoreInfo.value = isShow
     }
@@ -57,6 +61,16 @@ class DetailViewModel : ViewModel() {
             _listItemDetail.value = _repo.value?.getListItemDetail(getContext()!!)
         }
         return _listItemDetail.value!!
+    }
+
+    fun getTreeMapTag() : TreeMap<String, ArrayList<MediaItems>> {
+        if (_repo.value == null) {
+            _repo.value = RepositoryImpl()
+        }
+        if(_treeMapTag.value == null) {
+            _treeMapTag.value = _repo.value?.getTreeMapTag()
+        }
+        return _treeMapTag.value!!
     }
 
     fun setFilmStripScrolling(isScrolling: Boolean) {

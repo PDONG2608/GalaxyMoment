@@ -9,14 +9,20 @@ import com.example.galaxymoment.data.HeaderItem
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.data.TimeLineType
 import java.text.SimpleDateFormat
+import java.util.TreeMap
 
 class RepositoryImpl : IRepository {
+    private val treeMapTag = TreeMap<String, ArrayList<MediaItems>>()
     override fun getListItemDetail(context: Context): ArrayList<MediaItems> {
         return getVideo(context)
     }
 
     override fun getListItemTimeLine(context: Context): ArrayList<TimeLineType> {
         return formatToTypeTimeLine(getVideo(context))
+    }
+
+    override fun getTreeMapTag(): TreeMap<String, ArrayList<MediaItems>> {
+        return treeMapTag
     }
 
     @SuppressLint("SimpleDateFormat")
@@ -33,6 +39,7 @@ class RepositoryImpl : IRepository {
 
 
     private fun getVideo(context: Context): ArrayList<MediaItems> {
+        val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested")
         val projection = arrayOf(
             MediaStore.Video.Media.DATA,
             MediaStore.Video.Media._ID,
@@ -60,8 +67,8 @@ class RepositoryImpl : IRepository {
             val pathColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.DATA)
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
             val resolutionColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)
-
             while (cursor.moveToNext()) {
+                val randomLabels = chipLabels.toList().shuffled().take(2)
                 val id = cursor.getLong(idColumn)
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
                     .appendPath(id.toString()).build()
@@ -74,22 +81,32 @@ class RepositoryImpl : IRepository {
                 val resolution = cursor.getString(resolutionColumn)
                 val videoCodec = "abc"
                 val videoFps = 111
-                val resDate = if(dateTaken != 0L) dateTaken else dateAdded
-                listItem.add(
-                    MediaItems(
-                        uri,
-                        duration,
-                        resDate,
-                        path,
-                        size,
-                        resolution,
-                        videoCodec,
-                        videoFps,
-                        false
-                    )
+                val resDate = if (dateTaken != 0L) dateTaken else dateAdded
+                val mediaItem = MediaItems(
+                    uri,
+                    duration,
+                    resDate,
+                    path,
+                    size,
+                    resolution,
+                    videoCodec,
+                    videoFps,
+                    false,
+                    randomLabels
                 )
+                listItem.add(mediaItem)
+                filterTagAddToTreeMap(mediaItem)
             }
         }
         return listItem
+    }
+
+    private fun filterTagAddToTreeMap(mediaItem: MediaItems) {
+        for (tag in mediaItem.tagList) {
+            if (!treeMapTag.containsKey(tag)) {
+                treeMapTag[tag] = ArrayList()
+            }
+            treeMapTag[tag]!!.add(mediaItem)
+        }
     }
 }

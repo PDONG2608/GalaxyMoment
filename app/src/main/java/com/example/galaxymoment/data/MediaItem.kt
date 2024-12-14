@@ -11,6 +11,7 @@ data class MediaItems(
     val resolution: String,
     val videoCodec: String,
     val fps : Int,
-    val isChecked: Boolean
+    val isChecked: Boolean,
+    val tagList: List<String> = emptyList()
 ) {
 }
