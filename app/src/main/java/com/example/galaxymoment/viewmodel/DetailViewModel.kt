@@ -38,6 +38,9 @@ class DetailViewModel : ViewModel() {
     private val _treeMapTag = MutableLiveData<TreeMap<String, ArrayList<MediaItems>>>()
     val treeMapTag: LiveData<TreeMap<String, ArrayList<MediaItems>>> = _treeMapTag
 
+    private val _listItemByTags = MutableLiveData<ArrayList<TimeLineType>>()
+    val listItemByTags: LiveData<ArrayList<TimeLineType>> = _listItemByTags
+
     fun setShowMoreInfo(isShow: Boolean) {
         _isShowMoreInfo.value = isShow
     }
@@ -53,12 +56,22 @@ class DetailViewModel : ViewModel() {
         return _context.value!!
     }
 
+    fun getListItemTimeLine() : ArrayList<TimeLineType>{
+        if (_repo.value == null) {
+            _repo.value = RepositoryImpl()
+        }
+        if (_listItemTimeLine.value == null) {
+            _listItemTimeLine.value = _repo.value?.getListItemTimeLine(getContext()!!)
+        }
+        return _listItemTimeLine.value!!
+    }
+
     fun getListItemDetail(): ArrayList<MediaItems> {
         if (_repo.value == null) {
             _repo.value = RepositoryImpl()
         }
         if (_listItemDetail.value == null) {
-            _listItemDetail.value = _repo.value?.getListItemDetail(getContext()!!)
+            _listItemDetail.value = _repo.value?.getListItemDetail(getContext())
         }
         return _listItemDetail.value!!
     }
@@ -71,6 +84,17 @@ class DetailViewModel : ViewModel() {
             _treeMapTag.value = _repo.value?.getTreeMapTag()
         }
         return _treeMapTag.value!!
+    }
+
+    fun getListItemByTags(tags: ArrayList<String>) : ArrayList<TimeLineType> {
+        if (_repo.value == null) {
+            _repo.value = RepositoryImpl()
+        }
+        if(tags.isEmpty()){
+            return getListItemTimeLine()
+        }
+        _listItemByTags.value = _repo.value?.getListItemByTags(tags)
+        return _listItemByTags.value!!
     }
 
     fun setFilmStripScrolling(isScrolling: Boolean) {

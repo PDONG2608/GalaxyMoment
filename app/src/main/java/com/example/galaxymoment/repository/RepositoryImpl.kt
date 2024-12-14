@@ -12,7 +12,7 @@ import java.text.SimpleDateFormat
 import java.util.TreeMap
 
 class RepositoryImpl : IRepository {
-    private val treeMapTag = TreeMap<String, ArrayList<MediaItems>>()
+    private val treeMapTag = TreeMap<String, ArrayList<MediaItems>>(compareBy { it })
     override fun getListItemDetail(context: Context): ArrayList<MediaItems> {
         return getVideo(context)
     }
@@ -23,6 +23,21 @@ class RepositoryImpl : IRepository {
 
     override fun getTreeMapTag(): TreeMap<String, ArrayList<MediaItems>> {
         return treeMapTag
+    }
+
+    override fun getListItemByTags(tags: ArrayList<String>): ArrayList<TimeLineType> {
+        val listItem = ArrayList<MediaItems>()
+        for (tag in tags) {
+            if (treeMapTag.containsKey(tag)) {
+                for (mediaItem in treeMapTag[tag]!!) {
+                    if (mediaItem.tagList.containsAll(tags) && !listItem.contains(mediaItem)) {
+                        listItem.add(mediaItem)
+                    }
+                }
+            }
+        }
+        listItem.sortByDescending { it.date }
+        return formatToTypeTimeLine(listItem)
     }
 
     @SuppressLint("SimpleDateFormat")

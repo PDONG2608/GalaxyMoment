@@ -43,6 +43,7 @@ class ViewPagerManager(
         buttonMoreInfoClick()
         moreInfoListener()
         handleFilmStripScrolling()
+        observe()
     }
 
     private fun handleFilmStripScrolling() {
@@ -99,6 +100,7 @@ class ViewPagerManager(
             }
         })
     }
+
     private fun moreInfoListener() {
         mDetailViewModel.isShowMoreInfo.observe(mDetailViewModel.getContext() as LifecycleOwner) {
             if (it == true) {
@@ -110,12 +112,17 @@ class ViewPagerManager(
             }
         }
     }
-
     private fun buttonMoreInfoClick() {
         binding.buttonOpenMoreinfo.setOnClickListener {
             if (mDetailViewModel.isShowMoreInfo.value == null || mDetailViewModel.isShowMoreInfo.value == false) {
                 mDetailViewModel.setShowMoreInfo(true)
             }
+        }
+    }
+
+    private fun observe() {
+        mDetailViewModel.currentPosPager.observe(mDetailViewModel.getContext() as LifecycleOwner) {position ->
+           mViewPager.setCurrentItem(position, false)
         }
     }
 }

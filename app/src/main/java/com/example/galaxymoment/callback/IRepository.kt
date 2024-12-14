@@ -6,7 +6,8 @@ import com.example.galaxymoment.data.TimeLineType
 import java.util.TreeMap
 
 interface IRepository {
-    fun getListItemDetail(context: Context) : ArrayList<MediaItems>
-    fun getListItemTimeLine(context: Context) : ArrayList<TimeLineType>
+    fun getListItemDetail(context: Context): ArrayList<MediaItems>
+    fun getListItemTimeLine(context: Context): ArrayList<TimeLineType>
     fun getTreeMapTag(): TreeMap<String, ArrayList<MediaItems>>
+    fun getListItemByTags(tags: ArrayList<String>): ArrayList<TimeLineType>
 }
