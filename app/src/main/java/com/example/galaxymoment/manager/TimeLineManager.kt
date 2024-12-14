@@ -34,7 +34,7 @@ class TimeLineManager (
     }
 
     override fun onClickTimeline(uri: String, position: Int) {
-//        mTimelineViewModel.setCurrentPosPager(position)
+        mTimelineViewModel.setCurrentPosPager(position)
         val detailFragment = DetailFragment()
         val bundle = Bundle()
         bundle.putString("timeLineUri", uri)

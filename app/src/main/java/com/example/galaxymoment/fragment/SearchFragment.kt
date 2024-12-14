@@ -13,24 +13,26 @@ import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.databinding.FragmentSearchBinding
 import com.example.galaxymoment.utils.LogicUtils
 import com.example.galaxymoment.viewmodel.DetailViewModel
+import com.google.android.material.chip.Chip
 
 class SearchFragment : Fragment() {
-    private var tagSearch: String? = null
+    private var firstTagSearch: String? = null
     private var mMediaItems = ArrayList<MediaItems>()
     private var mTimeLineItem = ArrayList<TimeLineType>()
-    private var mDetailViewModel: DetailViewModel? = null
+    private var viewModel: DetailViewModel? = null
+    private val chipLabels = arrayOf("happy", "sad", "lonely", "smile", "angry", "interested")
     private val _binding : FragmentSearchBinding by lazy { FragmentSearchBinding.bind(requireView()) }
     private val binding get() = _binding
 
     fun setDetailViewModel(detailViewModel: DetailViewModel) {
-        mDetailViewModel = detailViewModel
+        viewModel = detailViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            tagSearch = it.getString("tagsearch")
-            mMediaItems = mDetailViewModel!!.getTreeMapTag()[tagSearch]!!
+            firstTagSearch = it.getString("tagsearch")
+            mMediaItems = viewModel!!.getTreeMapTag()[firstTagSearch]!!
             mTimeLineItem = LogicUtils.formatToTypeTimeLine(mMediaItems)
         }
     }
@@ -44,12 +46,49 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val searchAdapter = SearchAdapter(mTimeLineItem)
+        initChipView()
+        loadRecycleView(mTimeLineItem)
+    }
+
+    private fun initChipView() {
+        binding.chipGroup.removeAllViews()
+        binding.chipGroupSearch.removeAllViews()
+        for (tagString in chipLabels) {
+            val chip = Chip(requireContext())
+            chip.text = tagString
+            if(tagString == firstTagSearch) {
+                binding.chipGroupSearch.addView(chip)
+            }else {
+                binding.chipGroup.addView(chip)
+            }
+            chip.setOnClickListener {
+                if(chip.parent == binding.chipGroup) {
+                    binding.chipGroup.removeView(chip)
+                    binding.chipGroupSearch.addView(chip)
+                } else if( chip.parent == binding.chipGroupSearch) {
+                    binding.chipGroupSearch.removeView(chip)
+                    binding.chipGroup.addView(chip)
+                }
+                reloadData()
+            }
+        }
+    }
+
+    private fun reloadData() {
+        val selectedTag = ArrayList<String>()
+        for (i in 0 until binding.chipGroupSearch.childCount) {
+            val chip = binding.chipGroupSearch.getChildAt(i) as Chip
+            selectedTag.add(chip.text.toString())
+        }
+        val newLists = viewModel!!.getListItemByTags(selectedTag)
+        loadRecycleView(newLists)
+    }
+
+    private fun loadRecycleView(newLists: ArrayList<TimeLineType>) {
+        val searchAdapter = SearchAdapter(newLists)
         val mLayoutManager = GridLayoutManager(requireContext(), 4)
         binding.recyclerView.adapter = searchAdapter
         binding.recyclerView.layoutManager = mLayoutManager
         LogicUtils.setSpanSize(searchAdapter, mLayoutManager, 4)
     }
-
-
 }

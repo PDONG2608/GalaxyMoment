@@ -4,18 +4,54 @@
     android:layout_height="match_parent"
     tools:context=".fragment.SearchFragment">
 
-    <androidx.appcompat.widget.SearchView
-        android:id="@+id/searchView"
+    <FrameLayout
+        android:id="@+id/searchViewContainer"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:queryHint="Search..." />
+        android:layout_height="50dp"
+        android:layout_margin="8dp">
+
+        <EditText
+            android:id="@+id/searchView"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:hint="Search"
+            android:imeOptions="actionSearch"
+            android:inputType="text" />
+
+        <HorizontalScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/chip_view_search"
+            android:layout_width="wrap_content"
+            android:layout_height="50dp">
+
+            <com.google.android.material.chip.ChipGroup
+                android:id="@+id/chip_group_search"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                app:singleLine="true" />
+        </HorizontalScrollView>
+    </FrameLayout>
+
+    <HorizontalScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/chipView"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_below="@+id/searchViewContainer">
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            app:singleLine="true" />
+
+    </HorizontalScrollView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/searchView"
+        android:layout_below="@id/chipView"
         android:layout_marginTop="10dp"
         android:scrollbars="vertical" />
 
