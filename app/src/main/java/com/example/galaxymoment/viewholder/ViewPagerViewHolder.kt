@@ -10,7 +10,6 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.galaxymoment.data.MediaItems
-import com.example.galaxymoment.databinding.FragmentDetailBinding
 import com.example.galaxymoment.databinding.ItemViewPagerBinding
 import com.example.galaxymoment.manager.MoreInfoManager
 import com.example.galaxymoment.utils.AnimationHelper
@@ -30,7 +29,7 @@ class ViewPagerViewHolder(
             .frame(0)
             .fitCenter()
             .into(binding.singlePageImage)
-        moreInfoManger = MoreInfoManager(item, binding)
+        moreInfoManger = MoreInfoManager(item, binding, viewModel)
         swipeUpDownVideo()
         viewModel.isShowMoreInfo.observe(binding.root.context as LifecycleOwner) {
             if (it) showMoreInfo() else hideMoreInfo()

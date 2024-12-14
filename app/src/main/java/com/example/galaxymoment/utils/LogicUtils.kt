@@ -6,8 +6,12 @@ import android.media.MediaExtractor
 import android.media.MediaFormat
 import android.net.Uri
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView.Adapter
+import com.example.galaxymoment.adapter.BaseAdapter
 import com.example.galaxymoment.adapter.TimeLineAdapter
+import com.example.galaxymoment.data.HeaderItem
 import com.example.galaxymoment.data.MediaItems
+import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.viewmodel.DetailViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -23,13 +27,13 @@ class LogicUtils {
          * set span size of item in recyclerView
          */
         fun setSpanSize(
-            mTimelineAdapter: TimeLineAdapter,
+            mTimelineAdapter: Adapter<*>?,
             layoutManager: GridLayoutManager,
             numberSpan: Int
         ) {
             layoutManager.spanSizeLookup = object : GridLayoutManager.SpanSizeLookup() {
                 override fun getSpanSize(position: Int): Int {
-                    return if (mTimelineAdapter.getItemViewType(position) == TimeLineAdapter.TYPE_HEADER) numberSpan else 1
+                    return if (mTimelineAdapter?.getItemViewType(position) == BaseAdapter.TYPE_HEADER) numberSpan else 1
                 }
             }
         }
@@ -118,6 +122,17 @@ class LogicUtils {
             }
             extractor.release()
             return "Unknown Codec"
+        }
+
+        fun formatToTypeTimeLine(listVideo: ArrayList<MediaItems>): ArrayList<TimeLineType> {
+            val finalList = ArrayList<TimeLineType>()
+            val mapGroupedItems = listVideo.groupBy { SimpleDateFormat("dd-MM-yyyy").format(it.date) }
+                .mapValues { ArrayList(it.value) }
+            mapGroupedItems.keys.forEach { key ->
+                finalList.add(TimeLineType.TypeHeader(HeaderItem(key, false)))
+                finalList.addAll(mapGroupedItems[key]!!.map { TimeLineType.TypeContent(it) })
+            }
+            return finalList
         }
     }
 }
