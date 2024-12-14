@@ -45,6 +45,10 @@ class MoreInfoManager(
         for (tag in mMediaItem.tagList){
             val chip = Chip(binding.moreInfoLayout.root.context)
             chip.text = tag
+            chip.setChipBackgroundColorResource(R.color.white)
+            chip.setChipStrokeColorResource(R.color.black)
+            chip.setTextColor(chip.context.getColor(R.color.black))
+            chip.chipStrokeWidth = 10f
             chipGroup.addView(chip)
             chip.setOnClickListener {
                 val bundle = Bundle()

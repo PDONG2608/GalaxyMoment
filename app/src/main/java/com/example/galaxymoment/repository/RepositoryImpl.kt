@@ -83,7 +83,7 @@ class RepositoryImpl : IRepository {
             val sizeColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.SIZE)
             val resolutionColumn = cursor.getColumnIndexOrThrow(MediaStore.Video.Media.RESOLUTION)
             while (cursor.moveToNext()) {
-                val randomLabels = chipLabels.toList().shuffled().take(2)
+                val randomLabels = chipLabels.toList().shuffled().take(3)
                 val id = cursor.getLong(idColumn)
                 val uri = MediaStore.Video.Media.EXTERNAL_CONTENT_URI.buildUpon()
                     .appendPath(id.toString()).build()

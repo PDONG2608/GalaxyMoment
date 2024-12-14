@@ -1,13 +1,16 @@
 package com.example.galaxymoment.adapter
 
 
+import android.transition.TransitionManager
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.example.galaxymoment.callback.ITouchListener
 import com.example.galaxymoment.data.TimeLineType
+import com.example.galaxymoment.utils.TimeLineDiffCallback
 
-abstract class BaseAdapter<T>(
-    protected val items: List<T>
+abstract class BaseAdapter<T : TimeLineType>(
+    protected var items: ArrayList<TimeLineType>
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     protected lateinit var mITouchListener: ITouchListener
@@ -39,5 +42,13 @@ abstract class BaseAdapter<T>(
 
     fun setITouchListener(iTouchListener: ITouchListener) {
         mITouchListener = iTouchListener
+    }
+
+    fun updateData(newList: ArrayList<TimeLineType>){
+        val diffCallback = TimeLineDiffCallback(items, newList)
+        val diffResult = DiffUtil.calculateDiff(diffCallback)
+        items.clear()
+        items.addAll(newList)
+        diffResult.dispatchUpdatesTo(this)
     }
 }

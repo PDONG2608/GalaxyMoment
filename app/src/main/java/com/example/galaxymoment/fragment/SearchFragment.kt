@@ -1,12 +1,15 @@
 package com.example.galaxymoment.fragment
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.galaxymoment.R
+import com.example.galaxymoment.adapter.BaseAdapter
 import com.example.galaxymoment.adapter.SearchAdapter
 import com.example.galaxymoment.data.MediaItems
 import com.example.galaxymoment.data.TimeLineType
@@ -50,12 +53,17 @@ class SearchFragment : Fragment() {
         loadRecycleView(mTimeLineItem)
     }
 
+    @SuppressLint("ResourceType")
     private fun initChipView() {
         binding.chipGroup.removeAllViews()
         binding.chipGroupSearch.removeAllViews()
         for (tagString in chipLabels) {
             val chip = Chip(requireContext())
             chip.text = tagString
+            chip.setChipBackgroundColorResource(R.color.white)
+            chip.setChipStrokeColorResource(R.color.black)
+            chip.setTextColor(resources.getColor(R.color.black))
+            chip.chipStrokeWidth = 10f
             if(tagString == firstTagSearch) {
                 binding.chipGroupSearch.addView(chip)
             }else {
@@ -81,7 +89,7 @@ class SearchFragment : Fragment() {
             selectedTag.add(chip.text.toString())
         }
         val newLists = viewModel!!.getListItemByTags(selectedTag)
-        loadRecycleView(newLists)
+        (binding.recyclerView.adapter as BaseAdapter<*>).updateData(newLists)
     }
 
     private fun loadRecycleView(newLists: ArrayList<TimeLineType>) {
@@ -89,6 +97,7 @@ class SearchFragment : Fragment() {
         val mLayoutManager = GridLayoutManager(requireContext(), 4)
         binding.recyclerView.adapter = searchAdapter
         binding.recyclerView.layoutManager = mLayoutManager
+        binding.recyclerView.itemAnimator = DefaultItemAnimator()
         LogicUtils.setSpanSize(searchAdapter, mLayoutManager, 4)
     }
 }

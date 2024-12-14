@@ -13,5 +13,4 @@ data class MediaItems(
     val fps : Int,
     val isChecked: Boolean,
     val tagList: List<String> = emptyList()
-) {
-}
+)
