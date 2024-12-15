@@ -1,6 +1,7 @@
 package com.example.galaxymoment.viewmodel
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -41,6 +42,12 @@ class DetailViewModel : ViewModel() {
     private val _listItemByTags = MutableLiveData<ArrayList<TimeLineType>>()
     val listItemByTags: LiveData<ArrayList<TimeLineType>> = _listItemByTags
 
+    private val _currentUri = MutableLiveData<String>()
+    val currentPath: LiveData<String> = _currentUri
+
+    fun setCurrentUri(uri: Uri) {
+        _currentUri.value = uri.toString()
+    }
     fun setShowMoreInfo(isShow: Boolean) {
         _isShowMoreInfo.value = isShow
     }

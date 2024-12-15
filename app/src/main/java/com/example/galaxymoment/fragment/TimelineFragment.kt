@@ -2,11 +2,19 @@ package com.example.galaxymoment.fragment
 
 
 import android.os.Bundle
+import android.transition.ArcMotion
+import android.transition.ChangeBounds
+import android.transition.ChangeClipBounds
+import android.transition.ChangeImageTransform
+import android.transition.ChangeTransform
+import android.transition.TransitionSet
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.RecyclerView
 import com.example.galaxymoment.data.TimeLineType
 import com.example.galaxymoment.databinding.FragmentTimelineBinding
 import com.example.galaxymoment.manager.TimeLineManager
@@ -20,6 +28,11 @@ class TimelineFragment : Fragment() {
     private lateinit var mTimelineManager: TimeLineManager
     private lateinit var mListItem: ArrayList<TimeLineType>
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+    }
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -42,10 +55,24 @@ class TimelineFragment : Fragment() {
             val percentage = abs(verticalOffset).toFloat() / maxScroll.toFloat()
             binding.textCollapsingToolbar.alpha = (1 - percentage * 2)
         }
+        binding.recyclerView.viewTreeObserver.addOnPreDrawListener(
+            object : ViewTreeObserver.OnPreDrawListener {
+                override fun onPreDraw(): Boolean {
+                    binding.recyclerView.viewTreeObserver.removeOnPreDrawListener(this)
+                    startPostponedEnterTransition()
+                    return true
+                }
+            }
+        )
+
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun getRCV() : RecyclerView{
+        return binding.recyclerView
     }
 }

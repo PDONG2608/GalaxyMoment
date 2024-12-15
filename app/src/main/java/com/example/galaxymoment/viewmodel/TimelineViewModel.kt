@@ -55,4 +55,12 @@ class TimelineViewModel : ViewModel() {
         }
         return _listItemDetail.value!!
     }
+
+    fun getPositionForPath(it: String): Int {
+        val listItemDetail = getListItemDetail()
+        for (i in listItemDetail.indices) {
+            if (listItemDetail[i].uri.toString() == it) return i
+        }
+        return -1
+    }
 }

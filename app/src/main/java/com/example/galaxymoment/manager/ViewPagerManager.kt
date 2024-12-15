@@ -1,6 +1,5 @@
 package com.example.galaxymoment.manager
 
-import android.os.Bundle
 import android.util.Log
 import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
@@ -17,9 +16,8 @@ import com.example.galaxymoment.viewmodel.DetailViewModel
 class ViewPagerManager(
     private val mDetailViewModel: DetailViewModel,
     private val binding: ActivityDetailBinding,
-    private val extras: Bundle?,
+    private val stringPath: String?,
 ) {
-    private lateinit var mTimelineUri: String
     private lateinit var mViewPagerAdapter: ViewPagerAdapter
     private var mViewPager: ViewPager2 = binding.viewpager
     private var oldPosition = -1
@@ -27,10 +25,8 @@ class ViewPagerManager(
     private var mListViewHolder = ArrayList<ViewPagerViewHolder>()
 
     init {
-        extras?.let {
-            mTimelineUri = it.getString("timeLineUri").toString()
-        }
-        val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mDetailViewModel,mTimelineUri)
+        Log.i("dongdong","ViewPagerManager init $stringPath")
+        val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mDetailViewModel,stringPath!!)
         Log.i("dongdong", "ViewPagerManager positionOpenDetailView = $positionOpenDetailView")
         mViewPagerAdapter = ViewPagerAdapter(mDetailViewModel)
         mViewPager.adapter = mViewPagerAdapter
@@ -79,6 +75,7 @@ class ViewPagerManager(
                         mListViewHolder.add(mNewViewHolder)
                     }
                 }
+                mDetailViewModel.setCurrentUri(mDetailViewModel.getListItemDetail()[position].uri)
             }
 
             override fun onPageScrollStateChanged(state: Int) {

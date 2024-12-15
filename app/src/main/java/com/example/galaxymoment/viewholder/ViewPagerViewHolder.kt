@@ -29,6 +29,7 @@ class ViewPagerViewHolder(
             .frame(0)
             .fitCenter()
             .into(binding.singlePageImage)
+//        binding.singlePageImage.transitionName = item.uri.toString()
         moreInfoManger = MoreInfoManager(item, binding, viewModel)
         swipeUpDownVideo()
         viewModel.isShowMoreInfo.observe(binding.root.context as LifecycleOwner) {

@@ -14,6 +14,7 @@ class TimelineContentViewHolder(private val binding: ItemContentTimeLineBinding)
             .frame(0)
             .centerCrop()
             .into(binding.videoThumbnail)
+        binding.videoThumbnail.transitionName = videoItem.mediaItems.uri.toString()
     }
 
     fun getView(): ImageView {
