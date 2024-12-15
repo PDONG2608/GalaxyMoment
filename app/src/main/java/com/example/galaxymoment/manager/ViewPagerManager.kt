@@ -6,7 +6,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.example.galaxymoment.adapter.ViewPagerAdapter
-import com.example.galaxymoment.databinding.FragmentDetailBinding
+import com.example.galaxymoment.databinding.ActivityDetailBinding
 import com.example.galaxymoment.utils.AnimationHelper
 import com.example.galaxymoment.utils.OffsetHelper
 import com.example.galaxymoment.utils.Constants
@@ -16,8 +16,8 @@ import com.example.galaxymoment.viewmodel.DetailViewModel
 
 class ViewPagerManager(
     private val mDetailViewModel: DetailViewModel,
-    private val binding: FragmentDetailBinding,
-    private val arguments: Bundle?
+    private val binding: ActivityDetailBinding,
+    private val extras: Bundle?,
 ) {
     private lateinit var mTimelineUri: String
     private lateinit var mViewPagerAdapter: ViewPagerAdapter
@@ -27,7 +27,7 @@ class ViewPagerManager(
     private var mListViewHolder = ArrayList<ViewPagerViewHolder>()
 
     init {
-        arguments?.let {
+        extras?.let {
             mTimelineUri = it.getString("timeLineUri").toString()
         }
         val positionOpenDetailView = LogicUtils.calculatePositionOpenDetail(mDetailViewModel,mTimelineUri)

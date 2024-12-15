@@ -1,6 +1,5 @@
 package com.example.galaxymoment.utils
 
-import com.example.galaxymoment.databinding.FragmentDetailBinding
 
 class OffsetHelper {
     companion object {

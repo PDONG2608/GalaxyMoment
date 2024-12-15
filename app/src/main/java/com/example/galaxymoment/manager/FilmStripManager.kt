@@ -5,11 +5,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSnapHelper
 import androidx.recyclerview.widget.RecyclerView
 import com.example.galaxymoment.adapter.FilmStripAdapter
-import com.example.galaxymoment.databinding.FragmentDetailBinding
+import com.example.galaxymoment.databinding.ActivityDetailBinding
 import com.example.galaxymoment.viewmodel.DetailViewModel
 
 
-class FilmStripManager(private val mDetailViewModel: DetailViewModel, private val binding: FragmentDetailBinding) {
+class FilmStripManager(private val mDetailViewModel: DetailViewModel, private val binding: ActivityDetailBinding) {
     private lateinit var snapHelper: LinearSnapHelper
     private lateinit var mLayoutManager: LinearLayoutManager
     private lateinit var mAdapterFilmStrip: FilmStripAdapter
